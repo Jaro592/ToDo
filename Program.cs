@@ -1,1 +1,10 @@
-﻿System.Console.WriteLine("test");
+﻿class Program
+{
+    static void Main(string[] args)
+    {
+        string filePath = "tasks.json";
+        ITaskRepository repository = new JsonTaskRepository(filePath);
+        ITaskService service = new TaskSerivce(repository);
+
+    }
+}
