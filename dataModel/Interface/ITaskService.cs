@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 
-interface ITaskService
+public interface ITaskService
 {
     IEnumerable<TaskItem> GetAllTasks();
     void AddTask(string description);

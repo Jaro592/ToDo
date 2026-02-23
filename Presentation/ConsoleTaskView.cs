@@ -7,9 +7,9 @@ public class ConsoleTaskView : ITaskView
         _service = service;
     }
 
-    void DisplayTasks()
+    void DisplayTasks(IEnumerable<TaskItem> tasks)
     {
-        var tasks = _service.GetAllTasks();
+        Console.Clear();
         Console.WriteLine("=== ToDo List ===");
         foreach (var task in tasks)
         {
@@ -17,7 +17,7 @@ public class ConsoleTaskView : ITaskView
         }
     }
 
-    string Prompt(string prompt){
+    string? Prompt(string prompt){
         Console.Write(prompt);
         return Console.ReadLine();  
     }
@@ -26,7 +26,7 @@ public class ConsoleTaskView : ITaskView
     {
         while (true)
         {
-            DisplayTasks(_service.GetAllTasks);
+            DisplayTasks(_service.GetAllTasks());
             System.Console.WriteLine("\n Options");
             System.Console.WriteLine("1. Add Task");
             System.Console.WriteLine("2. Remove Task");
@@ -45,9 +45,9 @@ public class ConsoleTaskView : ITaskView
                     _service.RemoveTask(idToRemove);
                     break;
                 case "3":
-                    int idToToggle = int.Parse(Prompt("Enter task id to toggle completion: "));
-                    if(int.TryParse(toggleIdStr, out int idToToggle)){
-                        _service.ToggleTaskCompletion(idToToggle);
+                    string idToToggle = Prompt("Enter task id to toggle completion: ");
+                    if(int.TryParse(idToToggle, out int toggleId)){
+                        _service.ToggleTaskCompletion(toggleId);
                     }
                     break;
                 case "4":
