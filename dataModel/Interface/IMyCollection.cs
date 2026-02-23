@@ -13,4 +13,8 @@ interface IMyCollection<T>
     IMyIterator<T> GetIterator();
     IEnumerator<T> GetEnumerator();
 
+    bool Hasnext(); // checks if there is another element in the collection
+    T Next(); // gets the next element in the collection
+    void Reset(); // resets the iterator to the beginning of the collection
+
 }
