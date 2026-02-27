@@ -1,4 +1,4 @@
-interface IMyIterator<T>
+public interface IMyIterator<T>
 {
     bool HasNext();
     T Next();

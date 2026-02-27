@@ -1,4 +1,4 @@
-interface IMyCollection<T>
+public interface IMyCollection<T>
 {
     void Add(T item);
     void Remove(T item);
@@ -10,10 +10,10 @@ interface IMyCollection<T>
 
     R Reduce<R>( R initial, Func<R,T,R> accumulator);
 
-    IMyIterator<T> GetIterator();
-    IEnumerator<T> GetEnumerator();
+    public IMyIterator<T> GetIterator();
+    public IEnumerator<T> GetEnumerator();
 
-    bool Hasnext(); // checks if there is another element in the collection
+    bool HasNext(); // checks if there is another element in the collection
     T Next(); // gets the next element in the collection
     void Reset(); // resets the iterator to the beginning of the collection
 
