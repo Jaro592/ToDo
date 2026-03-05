@@ -3,7 +3,6 @@ using System.Collections;
 using System.Collections.Generic;
 using System;
 
-[Serializable]
 public sealed class MyArray<T> : IMyCollection<T>, IEnumerable<T>, IMyIterator<T> where T : IEquatable<T>
 {
     private T[] _data;
@@ -30,7 +29,6 @@ public sealed class MyArray<T> : IMyCollection<T>, IEnumerable<T>, IMyIterator<T
         _index = -1;
     }
 
-    [JsonConstructor]
     public MyArray(T[] data, int lastIndex)
     {
         _data = data ?? new T[10];
@@ -53,7 +51,6 @@ public sealed class MyArray<T> : IMyCollection<T>, IEnumerable<T>, IMyIterator<T
     }
 
     public int Count {get => _index + 1;}
-    [JsonIgnore]
     public bool Dirty {get => _isDirty == false;}
 
     public T[] Resize(T[] arr)
