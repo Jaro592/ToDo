@@ -56,15 +56,20 @@ public sealed class MyArray<T> : IMyCollection<T>, IEnumerable<T>, IMyIterator<T
     [JsonIgnore]
     public bool Dirty {get => _isDirty == false;}
 
+    public T[] Resize(T[] arr)
+    {
+        T[] newData = new T[_data.Length * 2];
+        for (int i = 0; i <= _index; i++) newData[i] = _data[i];
+        _data = newData;
+        return _data;
+    }
 
     public void Add(T item)
     {
         if(item == null) return;
         if (_index + 1 >= _data.Length)
         {
-            T[] newData = new T[_data.Length * 2];
-            for (int i = 0; i <= _index; i++) newData[i] = _data[i];
-            _data = newData;
+            Resize(_data);
         }
         
         _index++;
