@@ -154,7 +154,7 @@ public sealed class MyArray<T> : IMyCollection<T>, IEnumerable<T>, IMyIterator<T
             yield return _data[i];
         }
     }
-    System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator()
+    IEnumerator IEnumerable.GetEnumerator()
     {
         return GetEnumerator();
     }
