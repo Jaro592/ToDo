@@ -59,7 +59,6 @@ public sealed class MyArray<T> : IMyCollection<T>, IEnumerable<T>, IMyIterator<T
 
     public void Add(T item)
     {
-        // check item
         if(item == null) return;
         if (_index + 1 >= _data.Length)
         {
@@ -75,7 +74,6 @@ public sealed class MyArray<T> : IMyCollection<T>, IEnumerable<T>, IMyIterator<T
 
     public void Remove(T item)
     {
-        // check item
         if(item == null) return;
         int foundIndex = Find(item);
         if (foundIndex != -1)
@@ -87,7 +85,6 @@ public sealed class MyArray<T> : IMyCollection<T>, IEnumerable<T>, IMyIterator<T
 
     public T FindBy<K>(K key, Func<T, K, bool> comparer)
     {
-        // check null references
         if (key == null || comparer == null) return default!;
         for(int i = 0; i <= _index; i++)
         {
@@ -98,7 +95,6 @@ public sealed class MyArray<T> : IMyCollection<T>, IEnumerable<T>, IMyIterator<T
 
     public IMyCollection<T> Filter(Func<T, bool> predicate)
     {
-        // check null reference
         MyArray<T> result = new MyArray<T>(_data.Length);
         for (int i = 0; i <= _index; i++)
         {
@@ -149,9 +145,9 @@ public sealed class MyArray<T> : IMyCollection<T>, IEnumerable<T>, IMyIterator<T
     {
         Reset();
         return this;
-    }           // geen idee hoe dit werkt
+    } 
 
-    public IEnumerator<T> GetEnumerator() //geen idee hoe dit werkt
+    public IEnumerator<T> GetEnumerator()
     {
         for (int i = 0; i <= _index; i++)
         {
