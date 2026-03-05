@@ -19,7 +19,7 @@ public class ConsoleTaskView : ITaskView
 
     string? Prompt(string prompt){
         Console.Write(prompt);
-        return Console.ReadLine();  
+        return Console.ReadLine()??  "";
     }
 
     public void Run()
@@ -33,19 +33,19 @@ public class ConsoleTaskView : ITaskView
             System.Console.WriteLine("3. Toggle Task Completion");
             System.Console.WriteLine("4. Exit");
 
-            string option = Prompt("select an option: ");
+            string? option = Prompt("select an option: ");
             switch (option)
             {
                 case "1":
-                    string description = Prompt("Enter task description: ");
+                    string? description = Prompt("Enter task description: ");
                     _service.AddTask(description);
                     break;
                 case "2":
-                    int idToRemove = int.Parse(Prompt("Enter task id to remove: "));
+                    int idToRemove = int.TryParse(Prompt("Enter task id to remove: "), out int removeId) ? removeId : 0; // veiliger parsen
                     _service.RemoveTask(idToRemove);
                     break;
                 case "3":
-                    string idToToggle = Prompt("Enter task id to toggle completion: ");
+                    string? idToToggle = Prompt("Enter task id to toggle completion: ");
                     if(int.TryParse(idToToggle, out int toggleId)){
                         _service.ToggleTaskCompletion(toggleId);
                     }

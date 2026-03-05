@@ -12,8 +12,9 @@ class TaskSerivce : ITaskService
     }
     public IEnumerable<TaskItem> GetAllTasks() => _tasks;
 
-    public void AddTask(string description)
+    public void AddTask(string? description)
     {
+        if (string.IsNullOrWhiteSpace(description)) return;
         int newId = _tasks.Count > 0 ? _tasks[_tasks.Count - 1].ID + 1 : 1;
         var newTask = new TaskItem { ID = newId, Description = description, Completed = false};
         _tasks.Add(newTask);
@@ -31,12 +32,14 @@ class TaskSerivce : ITaskService
     public void ToggleTaskCompletion(int id)
     {
         var task = _tasks.FindBy(id, (t, key) => t.ID == key);
-        if (task != null)
+        if (task != null && !task.Completed)
         {
             task.Completed = !task.Completed;
             _repository.SaveTasks(_tasks);
         }
+        return;
     }
+
     
 
 }

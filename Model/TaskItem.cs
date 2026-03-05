@@ -14,6 +14,11 @@ public class TaskItem : IEquatable<TaskItem>
         return other != null && ID == other.ID;
     }
 
+    public override int GetHashCode()
+    {
+        return ID.GetHashCode();
+    }
+
     public override string ToString()
     {
         return $"[{ID}] {Description} - {(Completed ? "Done" : "in progress")}";
