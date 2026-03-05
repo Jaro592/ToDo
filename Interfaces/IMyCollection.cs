@@ -10,8 +10,8 @@ public interface IMyCollection<T>
 
     R Reduce<R>( R initial, Func<R,T,R> accumulator);
 
-    public IMyIterator<T> GetIterator();
-    public IEnumerator<T> GetEnumerator();
+    IMyIterator<T> GetIterator();
+    IEnumerator<T> GetEnumerator();
 
     bool HasNext(); // checks if there is another element in the collection
     T Next(); // gets the next element in the collection

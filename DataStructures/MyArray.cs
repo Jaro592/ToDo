@@ -1,29 +1,66 @@
-public class MyArray<T> : IMyCollection<T>, IMyIterator<T> where T : IEquatable<T>
+using System.Text.Json.Serialization;
+using System.Collections;
+using System.Collections.Generic;
+using System;
+
+[Serializable]
+public sealed class MyArray<T> : IMyCollection<T>, IEnumerable<T>, IMyIterator<T> where T : IEquatable<T>
 {
     private T[] _data;
     private int _index;
     private int _iteratorIndex = -1;
     private bool _isDirty = false;
 
+    public T[] Data 
+    { 
+        get 
+        {
+            T[] result = new T[Count];
+            Array.Copy(_data, result, Count);
+            return result;
+        }
+    }
+
+    public int LastIndex => _index;
+
     public MyArray(int size = 10)
     {
+        if(size <= 0) size = 10;
         _data = new T[size];
         _index = -1;
     }
 
+    [JsonConstructor]
     public MyArray(T[] data, int lastIndex)
     {
-        _data = data;
+        _data = data ?? new T[10];
         _index = lastIndex;
     }
 
-    public int Count => _index + 1;
-    public bool Dirty => _isDirty;
-    public T[] data { get => _data; set { _data = value; _isDirty = true; } }
+    public T this[int index]
+    {
+        get 
+        {
+            if (index < 0 || index > _index) throw new IndexOutOfRangeException();
+            return _data[index];
+        }
+        set 
+        {
+            if (index < 0 || index > _index) throw new IndexOutOfRangeException();
+            _data[index] = value;
+            _isDirty = true;
+        }
+    }
+
+    public int Count {get => _index + 1;}
+    [JsonIgnore]
+    public bool Dirty {get => _isDirty == false;}
 
 
     public void Add(T item)
     {
+        // check item
+        if(item == null) return;
         if (_index + 1 >= _data.Length)
         {
             T[] newData = new T[_data.Length * 2];
@@ -38,6 +75,8 @@ public class MyArray<T> : IMyCollection<T>, IMyIterator<T> where T : IEquatable<
 
     public void Remove(T item)
     {
+        // check item
+        if(item == null) return;
         int foundIndex = Find(item);
         if (foundIndex != -1)
         {
@@ -48,6 +87,8 @@ public class MyArray<T> : IMyCollection<T>, IMyIterator<T> where T : IEquatable<
 
     public T FindBy<K>(K key, Func<T, K, bool> comparer)
     {
+        // check null references
+        if (key == null || comparer == null) return default!;
         for(int i = 0; i <= _index; i++)
         {
             if(comparer(_data[i], key)) return _data[i];
@@ -57,6 +98,7 @@ public class MyArray<T> : IMyCollection<T>, IMyIterator<T> where T : IEquatable<
 
     public IMyCollection<T> Filter(Func<T, bool> predicate)
     {
+        // check null reference
         MyArray<T> result = new MyArray<T>(_data.Length);
         for (int i = 0; i <= _index; i++)
         {
@@ -68,7 +110,7 @@ public class MyArray<T> : IMyCollection<T>, IMyIterator<T> where T : IEquatable<
         return result;
     }
 
-    public void Sort(Comparison<T> comparison)
+    public void Sort( Comparison<T> comparison)
     {
         for (int i = 0; i <= _index; i++)
         {
@@ -103,15 +145,22 @@ public class MyArray<T> : IMyCollection<T>, IMyIterator<T> where T : IEquatable<
 
     public void Reset() => _iteratorIndex = -1;
 
-    public IMyIterator<T> GetIterator() => (IMyIterator<T>)this; // ook ai
-
-    public IEnumerator<T> GetEnumerator() // dit is pure ai geen idee hoe dit werkt
+    public IMyIterator<T> GetIterator()
     {
         Reset();
-        while (HasNext())
+        return this;
+    }           // geen idee hoe dit werkt
+
+    public IEnumerator<T> GetEnumerator() //geen idee hoe dit werkt
+    {
+        for (int i = 0; i <= _index; i++)
         {
-            yield return Next();
+            yield return _data[i];
         }
+    }
+    System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator()
+    {
+        return GetEnumerator();
     }
 
     public int Find(T Item, int startIndex = 0)

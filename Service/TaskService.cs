@@ -3,7 +3,7 @@ using System.Collections.Generic;
 class TaskSerivce : ITaskService
 {
     private readonly ITaskRepository _repository;
-    private readonly List<TaskItem> _tasks;
+    private readonly MyArray<TaskItem> _tasks;
 
     public TaskSerivce(ITaskRepository repository)
     {
@@ -22,7 +22,7 @@ class TaskSerivce : ITaskService
     }
     public void RemoveTask(int id)
     {
-        var task = _tasks.Find(t => t.ID == id);
+        var task = _tasks.FindBy(id, (t, key) => t.ID == key);
         if (task != null){
             _tasks.Remove(task);
             _repository.SaveTasks(_tasks);
@@ -30,12 +30,13 @@ class TaskSerivce : ITaskService
     }
     public void ToggleTaskCompletion(int id)
     {
-        var task = _tasks.Find(t => t.ID == id);
+        var task = _tasks.FindBy(id, (t, key) => t.ID == key);
         if (task != null)
         {
             task.Completed = !task.Completed;
             _repository.SaveTasks(_tasks);
         }
     }
+    
 
 }
