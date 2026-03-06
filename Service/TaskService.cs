@@ -23,21 +23,24 @@ class TaskSerivce : ITaskService
     }
     public void RemoveTask(int id)
     {
-        var task = _tasks.FindBy(id, (t, key) => t.ID == key);
-        if (task != null){
+        var task = _tasks.FindBy(id, (t, key) => t.ID.CompareTo(key));
+        
+        if (task != null)
+        {
             _tasks.Remove(task);
             _repository.SaveTasks(_tasks);
         }
     }
+
     public void ToggleTaskCompletion(int id)
     {
-        var task = _tasks.FindBy(id, (t, key) => t.ID == key);
-        if (task != null && !task.Completed)
+        var task = _tasks.FindBy(id, (t, key) => t.ID.CompareTo(key));
+        
+        if (task != null)
         {
             task.Completed = !task.Completed;
             _repository.SaveTasks(_tasks);
         }
-        return;
     }
 
     

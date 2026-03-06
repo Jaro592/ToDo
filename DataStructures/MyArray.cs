@@ -85,14 +85,31 @@ public sealed class MyArray<T> : IMyCollection<T>, IEnumerable<T>, IMyIterator<T
         }
     }
 
-    public T FindBy<K>(K key, Func<T, K, bool> comparer)
+    public T? FindBy<K>(K key, Func<T, K, int> comparer)
     {
-        if (key == null || comparer == null) return default!;
-        for(int i = 0; i <= _index; i++)
+        // Basis checks
+        if (key == null) return default;
+
+        for (int i = 0; i <= _index; i++)
         {
-            if(comparer(_data[i], key)) return _data[i];
+            int result;
+
+            if (comparer != null)
+            {
+                result = comparer(_data[i], key);
+            }
+            else if (_data[i] is IComparable<K> comparable)
+            {
+                result = comparable.CompareTo(key);
+            }
+            else
+            {
+                return default;
+            }
+            if (result == 0) return _data[i];
         }
-        return default!;
+        
+        return default;
     }
 
     public IMyCollection<T> Filter(Func<T, bool> predicate)
