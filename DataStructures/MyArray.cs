@@ -87,7 +87,6 @@ public sealed class MyArray<T> : IMyCollection<T>, IEnumerable<T>, IMyIterator<T
 
     public T? FindBy<K>(K key, Func<T, K, int> comparer)
     {
-        // Basis checks
         if (key == null) return default;
 
         for (int i = 0; i <= _index; i++)
