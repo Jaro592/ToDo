@@ -14,14 +14,13 @@ public class ConsoleTaskView : ITaskView
         Console.WriteLine("=== ToDo List ===\n");
 
         Console.WriteLine("---In progress---");
-        foreach (var task in tasks.Filter(x => x.Completed == false))
+        foreach (var task in tasks.Filter(x => x.Completed == true))
         {
             System.Console.WriteLine(task);
         }
         System.Console.WriteLine();
 
-        System.Console.WriteLine("---Completed---");
-        foreach (var task in tasks.Filter(x => x.Completed == true))
+        foreach (var task in tasks.Filter(x => x.Completed == false))
         {
             System.Console.WriteLine(task);
         }
