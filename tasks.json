@@ -1,1 +1,22 @@
-[]
+[
+  {
+    "ID": 1,
+    "Description": "Implementing filter",
+    "Completed": false
+  },
+  {
+    "ID": 2,
+    "Description": "test",
+    "Completed": true
+  },
+  {
+    "ID": 3,
+    "Description": "test2",
+    "Completed": false
+  },
+  {
+    "ID": 4,
+    "Description": "asdas",
+    "Completed": false
+  }
+]
