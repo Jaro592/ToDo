@@ -14,9 +14,11 @@ public class ConsoleTaskView : ITaskView
     {
         Console.Clear();
         Console.WriteLine("=== ToDo List ===");
-        foreach (var task in tasks)
+        tasks.Reset();
+        while (tasks.HasNext())
         {
-            System.Console.WriteLine($"{task}");
+            var task = tasks.Next();
+            Console.WriteLine(task.ToString());
         }
     }
 

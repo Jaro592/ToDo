@@ -2,7 +2,7 @@ public interface IMyCollection<T>
 {
     void Add(T item);
     void Remove(T item);
-    T FindBy<K>(K key, Func<T,K,bool> Comparer);
+    T? FindBy<K>(K key, Func<T,K,int> Comparer);
     IMyCollection<T> Filter(Func<T, bool> predicate);
     void Sort(Comparison<T> comparison);
     int Count { get; }
@@ -11,7 +11,7 @@ public interface IMyCollection<T>
     R Reduce<R>( R initial, Func<R,T,R> accumulator);
 
     IMyIterator<T> GetIterator();
-    IEnumerator<T> GetEnumerator();
+    IMyCollection<T> GetEnumerator();
 
     bool HasNext(); // checks if there is another element in the collection
     T Next(); // gets the next element in the collection
