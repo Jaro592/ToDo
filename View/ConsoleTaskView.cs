@@ -8,23 +8,17 @@ public class ConsoleTaskView : ITaskView
         _service = service;
     }
 
+
     void DisplayTasks(IMyCollection<TaskItem> tasks)
     {
         Console.Clear();
-        Console.WriteLine("=== ToDo List ===\n");
-
-        Console.WriteLine("---In progress---");
-        foreach (var task in tasks.Filter(x => x.Completed == true))
+        Console.WriteLine("=== ToDo List ===");
+        tasks.Reset();
+        while (tasks.HasNext())
         {
-            System.Console.WriteLine(task);
+            var task = tasks.Next();
+            Console.WriteLine(task.ToString());
         }
-        System.Console.WriteLine();
-
-        foreach (var task in tasks.Filter(x => x.Completed == false))
-        {
-            System.Console.WriteLine(task);
-        }
-
     }
 
 
