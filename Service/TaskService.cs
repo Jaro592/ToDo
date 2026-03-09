@@ -10,7 +10,7 @@ class TaskSerivce : ITaskService
         _repository = repository;
         _tasks = _repository.LoadTasks();
     }
-    public IEnumerable<TaskItem> GetAllTasks() => _tasks;
+    public IMyCollection<TaskItem> GetAllTasks() => _tasks;
 
     public void AddTask(string? description)
     {

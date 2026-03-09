@@ -7,13 +7,15 @@ public class ConsoleTaskView : ITaskView
         _service = service;
     }
 
-    void DisplayTasks(IEnumerable<TaskItem> tasks)
+    void DisplayTasks(IMyCollection<TaskItem> tasks)
     {
         Console.Clear();
         Console.WriteLine("=== ToDo List ===");
-        foreach (var task in tasks)
+        tasks.Reset();
+        while (tasks.HasNext())
         {
-            System.Console.WriteLine($"{task}");
+            var task = tasks.Next();
+            Console.WriteLine(task.ToString());
         }
     }
 

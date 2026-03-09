@@ -1,9 +1,7 @@
 using System.Text.Json.Serialization;
-using System.Collections;
-using System.Collections.Generic;
 using System;
 
-public sealed class MyArray<T> : IMyCollection<T>, IEnumerable<T>, IMyIterator<T> where T : IEquatable<T>
+public sealed class MyArray<T> : IMyCollection<T>, IMyIterator<T> where T : IEquatable<T>
 {
     private T[] _data;
     private int _index;
@@ -165,16 +163,11 @@ public sealed class MyArray<T> : IMyCollection<T>, IEnumerable<T>, IMyIterator<T
         return this;
     } 
 
-    public IEnumerator<T> GetEnumerator()
+
+    public IMyCollection<T> GetEnumerator()
     {
-        for (int i = 0; i <= _index; i++)
-        {
-            yield return _data[i];
-        }
-    }
-    IEnumerator IEnumerable.GetEnumerator()
-    {
-        return GetEnumerator();
+        Reset();
+        return this;
     }
 
     public int Find(T Item, int startIndex = 0)
