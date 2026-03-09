@@ -27,7 +27,8 @@ class JsonTaskRepository : ITaskRepository
     }
     public void SaveTasks(MyArray<TaskItem> tasks)
     {
-        string json = JsonSerializer.Serialize(tasks, new JsonSerializerOptions { WriteIndented = true }); // written inteded zodat json file leesbaar is
+        var cleanArray = tasks.Data; 
+        string json = JsonSerializer.Serialize(cleanArray, new JsonSerializerOptions { WriteIndented = true });
         File.WriteAllText(_filePath, json);
     }
 }
