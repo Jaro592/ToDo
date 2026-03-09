@@ -3,8 +3,6 @@ using Microsoft.VisualBasic;
 public class ConsoleTaskView : ITaskView
 {
     private readonly ITaskService _service;
-    private int? filterStatus = null;
-
     public ConsoleTaskView(ITaskService service)
     {
         _service = service;
@@ -13,13 +11,21 @@ public class ConsoleTaskView : ITaskView
     void DisplayTasks(IMyCollection<TaskItem> tasks)
     {
         Console.Clear();
-        Console.WriteLine("=== ToDo List ===");
-        tasks.Reset();
-        while (tasks.HasNext())
+        Console.WriteLine("=== ToDo List ===\n");
+
+        Console.WriteLine("---In progress---");
+        foreach (var task in tasks.Filter(x => x.Completed == false))
         {
-            var task = tasks.Next();
-            Console.WriteLine(task.ToString());
+            System.Console.WriteLine(task);
         }
+        System.Console.WriteLine();
+
+        System.Console.WriteLine("---Completed---");
+        foreach (var task in tasks.Filter(x => x.Completed == true))
+        {
+            System.Console.WriteLine(task);
+        }
+
     }
 
 
@@ -34,22 +40,6 @@ public class ConsoleTaskView : ITaskView
         {
             var tmp = _service.GetAllTasks();
 
-            switch(filterStatus)
-            {
-                case 1:
-                    tmp = tmp.Filter(x => x.Completed == true);
-                    break;
-                case 2:
-                    tmp = tmp.Filter(x => x.Completed == false);
-                    break;
-                case 3:
-                    tmp = _service.GetAllTasks();
-                    break;
-                default:
-                    tmp = _service.GetAllTasks();
-                    break;
-
-            }
             DisplayTasks(tmp);
 
             System.Console.WriteLine("\n Options");
@@ -82,13 +72,10 @@ public class ConsoleTaskView : ITaskView
                     switch(optionFilter)
                     {
                         case "1":
-                            filterStatus = 1;
                             break;
                         case "2":
-                            filterStatus = 2;
                             break;
                         case "3":
-                            filterStatus = 3;
                             break;
                         default:
                             Console.WriteLine("Invalid option. Press any key to continue...");
