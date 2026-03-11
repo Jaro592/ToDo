@@ -1,28 +1,48 @@
 public class MyLinkedList<T> : IMyCollection<T>
 {
+
     private int _count;
-    int Count { get => _count; }
-    bool Dirty { get; }
+    private bool _dirty;
+    Node<T>? First = null;
+    public int Count { get => _count; }
+    public bool Dirty { get => _dirty; }
 
-    private Node _node;
+    // private Node<T> _node;
 
-    void Add(T item)
+    public void Add(T item)
     {
-        Node<T> newNode = new Node<T>();
+        Node<T> nNode = new Node<T>(item);
 
-        if (_node is null)
+        if (First is null)
         {
-            _count++;
-            Dirty = true;
-            return;
+            First = nNode;
         }
-        while (_node.Next != null)
+        else
         {
+            Node<T> current = First;
+            while (current.Next != null)
+            {
+                current = current.Next;
+            }
+
+            current.Next = nNode;
 
         }
+        _count++;
+        _dirty = true;
+
     }
+    public void AddFirst(T value)
+    {
+        First = new Node<T>(value, First);
+        _count++;
+        _dirty = true;
+    }
+
     void Remove(T item)
     {
+        if (First == null) return;
+
 
     }
     T FindBy<K>(K key, Func<T, K, bool> Comparer)
