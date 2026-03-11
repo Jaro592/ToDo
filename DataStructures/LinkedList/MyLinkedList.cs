@@ -41,7 +41,27 @@ public class MyLinkedList<T> : IMyCollection<T>
 
     void Remove(T item)
     {
-        if (First == null) return;
+        if (First is null) return;
+
+        if (First.Data.Equals(item))
+        {
+            First = First.Next;
+            _count--;
+            _dirty = true;
+            return;
+        }
+        Node<T> current = First;
+        while (current.Next is not null)
+        {
+            if (current.Next.Data.Equals(item))
+            {
+                current.Next = current.Next.Next;
+                _count--;
+                _dirty = true;
+                return;
+            }
+            current = current.Next;
+        }
 
 
     }
