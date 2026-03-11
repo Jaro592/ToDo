@@ -67,7 +67,18 @@ public class MyLinkedList<T> : IMyCollection<T>
     }
     T FindBy<K>(K key, Func<T, K, bool> Comparer)
     {
+        Node<T>? current = First;
 
+        while (current != null)
+        {
+            if (Comparer(current.Data, key))
+            {
+                return current.Data;
+            }
+            current = current.Next;
+        }
+
+        throw new InvalidOperationException("Item not found");
     }
     IMyCollection<T> Filter(Func<T, bool> predicate)
     {
