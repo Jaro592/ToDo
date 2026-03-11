@@ -82,7 +82,19 @@ public class MyLinkedList<T> : IMyCollection<T>
     }
     IMyCollection<T> Filter(Func<T, bool> predicate)
     {
+        IMyCollection<T> result = new MyCollection<T>();
+        if (First is null) return result;
 
+        Node<T>? current = First;
+        while (current is not null)
+        {
+            if (predicate(current.Data))
+            {
+                result.Add(current.Data);
+            }
+            current = current.Next;
+        }
+        return result;
     }
     void Sort(Comparison<T> comparison)
     {
