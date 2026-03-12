@@ -1,5 +1,5 @@
+using System;
 using System.Linq.Expressions;
-using Microsoft.VisualBasic;
 
 public class ConsoleTaskView : ITaskView
 {
@@ -10,38 +10,33 @@ public class ConsoleTaskView : ITaskView
         _service = service;
     }
 
-
-    void DisplayTasks(IMyCollection<TaskItem> tasks)
+    private void DisplayTasks(IMyCollection<TaskItem> tasks)
     {
         Console.Clear();
         Console.WriteLine("=== ToDo List ===\n");
 
         Console.WriteLine("---In progress---");
-
         tasks.Reset();
         var iterProgress = tasks.Filter(x => x.Completed == false).GetIterator();
         while (iterProgress.HasNext())
         {
-            var iter = iterProgress.Next();
-            Console.WriteLine(iter.ToString());
+            Console.WriteLine(iterProgress.Next().ToString());
         }
-        
-        System.Console.WriteLine("\n");
 
-        System.Console.WriteLine("---Completed---");
+        Console.WriteLine("\n---Completed---");
         tasks.Reset();
         var iterCompleted = tasks.Filter(x => x.Completed == true).GetIterator();
         while (iterCompleted.HasNext())
         {
-            var iter = iterCompleted.Next();
-            System.Console.WriteLine(iter.ToString());
+            Console.WriteLine(iterCompleted.Next().ToString());
         }
     }
 
-
-    string? Prompt(string prompt){
+    private string? Prompt(string prompt)
+    {
+        Console.CursorVisible = true;
         Console.Write(prompt);
-        return Console.ReadLine()??  "";
+        return Console.ReadLine() ?? "";
     }
 
     public void Run()
@@ -51,80 +46,78 @@ public class ConsoleTaskView : ITaskView
         menu.Add("Remove task");
         menu.Add("Toggle task completion");
         menu.Add("Exit");
+    
+        while (true)
+        {
+            DisplayTasks(_service.GetAllTasks());
 
+            int menuStartLine = Console.CursorTop + 1;
+            int selectedIndex = NavigateMenu(menu, menuStartLine);
+
+            switch (selectedIndex)
+            {
+                case 0:
+                    string? description = Prompt("\nEnter task description: ");
+                    _service.AddTask(description);
+                    break;
+                case 1:
+
+                    while (true)
+                    {
+                        NavigateMenu((MyArray<TaskItem>)_service.GetAllTasks(), 0);
+                    }
+                    string? idToRemove = Prompt("\nEnter task id to remove: ");
+                    if (int.TryParse(idToRemove, out int removeId))
+                        _service.RemoveTask(removeId);
+                    break;
+                case 2:
+                    string? idToToggle = Prompt("\nEnter task id to toggle completion: ");
+                    if (int.TryParse(idToToggle, out int toggleId))
+                        _service.ToggleTaskCompletion(toggleId);
+                    break;
+                case 3:
+                    return;
+            }
+        }
+    }
+
+    private int NavigateMenu(MyArray<TaskItem> options, int startLine)
+    {
         int selectedIndex = 0;
         ConsoleKey key;
 
+        Console.CursorVisible = false;
+
         while (true)
         {
-            Console.Clear();
- 
-            Console.CursorVisible = false;
-            DisplayTasks(_service.GetAllTasks());
 
-            System.Console.WriteLine("\n");
-
-            System.Console.WriteLine("Up and down arrey keys and enter for navigation.");  
-
-            for (int i = 0; i < menu.Count; i++)
+            for (int i = 0; i < options.Count; i++)
             {
+                Console.SetCursorPosition(0, startLine + i);
                 if (i == selectedIndex)
-                {
-                    Console.WriteLine($"> {menu[i]}");
-                    
-                }
+                    Console.Write($"> {options[i]}   ");
                 else
-                {
-                    Console.WriteLine($"  {menu[i]}");
-                }
+                    Console.Write($"  {options[i]}   ");
             }
 
-            ConsoleKeyInfo KeyInfo = Console.ReadKey(true);
-            key = KeyInfo.Key;
+            ConsoleKeyInfo keyInfo = Console.ReadKey(true);
+            key = keyInfo.Key;
 
             if (key == ConsoleKey.UpArrow)
             {
                 selectedIndex--;
-                if (selectedIndex < 0)
-                {
-                    selectedIndex = menu.Count -1;
-                }
+                if (selectedIndex < 0) selectedIndex = options.Count - 1;
             }
-            if (key == ConsoleKey.DownArrow)
+            else if (key == ConsoleKey.DownArrow)
             {
                 selectedIndex++;
-                if (selectedIndex >= menu.Count)
-                {
-                    selectedIndex = 0;
-                }
+                if (selectedIndex >= options.Count) selectedIndex = 0;
             }
-
-            if (key == ConsoleKey.Enter)
+            else if (key == ConsoleKey.Enter)
             {
-                switch(selectedIndex)
-                {
-                    case 0:
-                        Console.CursorVisible = true;
-                        string? description = Prompt("Enter task description: ");
-                        _service.AddTask(description);
-                        break;
-                    case 1:
-                        Console.CursorVisible = true;
-                        int idToRemove = int.TryParse(Prompt("Enter task id to remove: "), out int removeId) ? removeId : 0;
-                        _service.RemoveTask(idToRemove);
-                        break;
-                    case 2:
-                        Console.CursorVisible = true;
-                        string? idToToggle = Prompt("Enter task id to toggle completion: ");
-                        if(int.TryParse(idToToggle, out int toggleId)){
-                            _service.ToggleTaskCompletion(toggleId);
-                        }
-                        break;
-                    case 3:
-                        return;
-                }
+                Console.CursorVisible = true;
+                return selectedIndex;
             }
-
         }
     }
 }
