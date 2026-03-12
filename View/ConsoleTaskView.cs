@@ -1,3 +1,4 @@
+using System.Linq.Expressions;
 using Microsoft.VisualBasic;
 
 public class ConsoleTaskView : ITaskView
@@ -12,12 +13,27 @@ public class ConsoleTaskView : ITaskView
     void DisplayTasks(IMyCollection<TaskItem> tasks)
     {
         Console.Clear();
-        Console.WriteLine("=== ToDo List ===");
+        Console.WriteLine("=== ToDo List ===\n");
+
+        Console.WriteLine("---In progress---");
+
         tasks.Reset();
-        while (tasks.HasNext())
+        var iterProgress = tasks.Filter(x => x.Completed == false).GetIterator();
+        while (iterProgress.HasNext())
         {
-            var task = tasks.Next();
-            Console.WriteLine(task.ToString());
+            var iter = iterProgress.Next();
+            Console.WriteLine(iter.ToString());
+        }
+        
+        System.Console.WriteLine("\n");
+
+        System.Console.WriteLine("---Completed---");
+        tasks.Reset();
+        var iterCompleted = tasks.Filter(x => x.Completed == true).GetIterator();
+        while (iterCompleted.HasNext())
+        {
+            var iter = iterCompleted.Next();
+            System.Console.WriteLine(iter.ToString());
         }
     }
 
