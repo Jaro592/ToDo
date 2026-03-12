@@ -7,6 +7,8 @@ public class MyLinkedList<T> : IMyCollection<T>
     public int Count { get => _count; }
     public bool Dirty { get => _dirty; }
 
+    private Node _current;
+
     // private Node<T> _node;
 
     public void Add(T item)
@@ -98,35 +100,50 @@ public class MyLinkedList<T> : IMyCollection<T>
     }
     void Sort(Comparison<T> comparison)
     {
-
+        return;
     }
 
 
     R Reduce<R>(R initial, Func<R, T, R> accumulator)
     {
-
+        return default;
     }
 
-    IMyIterator<T> GetIterator()
-    {
+    // public R Reduce<R>(R initial, Func<R, T, R> accumulator)
+    // {
+    //     R result = initial;
+    //     for (int i = 0; i <= _index; i++)
+    //     {
+    //         result = accumulator(result, _data[i]);
+    //     }
+    //     return result;
+    // }
 
+    public IMyIterator<T> GetIterator()
+    {
+        Reset();
+        return this;
     }
-    IEnumerator<T> GetEnumerator()
+    public IMyCollection<T> GetEnumerator()
     {
-
+        Reset();
+        return this;
     }
 
-    bool Hasnext()
+    public bool Hasnext()
     {
-
+        return _current != null;
     }
-    T Next()
+    public  T Next()
     {
-
+        if (!Hasnext()) return default!;
+        T data = _current.Data;
+        _current = _current.Next;
+        return data;
     }
-    void Reset()
+    public void Reset()
     {
-
+        _current = First;
     }
 
 }
