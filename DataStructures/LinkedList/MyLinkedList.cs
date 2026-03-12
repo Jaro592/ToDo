@@ -11,7 +11,7 @@ public class MyLinkedList<T> : IMyCollection<T>
 
     // private Node<T> _node;
 
-    public void Add(T item)
+    public void Add(T item) // could add a last node to remove the while loop here
     {
         Node<T> nNode = new Node<T>(item);
 
@@ -22,7 +22,7 @@ public class MyLinkedList<T> : IMyCollection<T>
         else
         {
             Node<T> current = First;
-            while (current.Next != null)
+            while (current.Next is not null)
             {
                 current = current.Next;
             }
@@ -98,9 +98,38 @@ public class MyLinkedList<T> : IMyCollection<T>
         }
         return result;
     }
+
+    void Swap(Node<T> a, Node<T> b)
+    {
+        T temp = a.Data;
+        a.Data = b.Data;
+        b.Data = temp;
+    }
     void Sort(Comparison<T> comparison)
     {
+<<<<<<< HEAD
         return;
+=======
+        if (First is null) return;
+
+        Node<T>? current = First;
+        bool swapped;
+        do
+        {
+            swapped = false;
+            while (current.Next is not null)
+            {
+                if (comparison(current.Data, current.Next.Data) > 0)
+                {
+                    Swap(current, current.Next);
+
+                }
+                current = current.Next;
+            }
+        } while (swapped);
+        _dirty = true;
+
+>>>>>>> 1c60544 (linked list sort)
     }
 
 
