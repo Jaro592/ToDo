@@ -16,6 +16,7 @@ public class ConsoleTaskView : ITaskView
         Console.Clear();
         Console.WriteLine("=== ToDo List ===\n");
 
+        tasks.Sort((a, b) => a.ID.CompareTo(b.ID));
         Console.WriteLine("---In progress---");
 
         tasks.Reset();
