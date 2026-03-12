@@ -4,6 +4,7 @@ using Microsoft.VisualBasic;
 public class ConsoleTaskView : ITaskView
 {
     private readonly ITaskService _service;
+
     public ConsoleTaskView(ITaskService service)
     {
         _service = service;
@@ -45,60 +46,85 @@ public class ConsoleTaskView : ITaskView
 
     public void Run()
     {
+        MyArray<string> menu = new MyArray<string>();
+        menu.Add("Add task");
+        menu.Add("Remove task");
+        menu.Add("Toggle task completion");
+        menu.Add("Exit");
+
+        int selectedIndex = 0;
+        ConsoleKey key;
+
         while (true)
         {
-            var tmp = _service.GetAllTasks();
+            Console.Clear();
+ 
+            Console.CursorVisible = false;
+            DisplayTasks(_service.GetAllTasks());
 
-            DisplayTasks(tmp);
+            System.Console.WriteLine("\n");
 
-            System.Console.WriteLine("\n Options");
-            System.Console.WriteLine("1. Add task");
-            System.Console.WriteLine("2. Remove task");
-            System.Console.WriteLine("3. Toggle task completion");
-            System.Console.WriteLine("4. Filter by completion");
-            System.Console.WriteLine("5. Exit");
+            System.Console.WriteLine("Up and down arrey keys and enter for navigation.");  
 
-            string? option = Prompt("select an option: ");
-            switch (option)
+            for (int i = 0; i < menu.Count; i++)
             {
-                case "1":
-                    string? description = Prompt("Enter task description: ");
-                    _service.AddTask(description);
-                    break;
-                case "2":
-                    int idToRemove = int.TryParse(Prompt("Enter task id to remove: "), out int removeId) ? removeId : 0; // veiliger parsen
-                    _service.RemoveTask(idToRemove);
-                    break;
-                case "3":
-                    string? idToToggle = Prompt("Enter task id to toggle completion: ");
-                    if(int.TryParse(idToToggle, out int toggleId)){
-                        _service.ToggleTaskCompletion(toggleId);
-                    }
-                    break;
-                case "4":
-
-                    string? optionFilter = Prompt("'completed' (1) or 'in progress' (2) remove filter (3)\n> ");
-                    switch(optionFilter)
-                    {
-                        case "1":
-                            break;
-                        case "2":
-                            break;
-                        case "3":
-                            break;
-                        default:
-                            Console.WriteLine("Invalid option. Press any key to continue...");
-                            Console.ReadKey();
-                            break;
-                    }
-                    break;
-                case "5":
-                    return;
-                default:
-                    Console.WriteLine("Invalid option. Press any key to continue...");
-                    Console.ReadKey();
-                    break;
+                if (i == selectedIndex)
+                {
+                    Console.WriteLine($"> {menu[i]}");
+                    
+                }
+                else
+                {
+                    Console.WriteLine($"  {menu[i]}");
+                }
             }
+
+            ConsoleKeyInfo KeyInfo = Console.ReadKey(true);
+            key = KeyInfo.Key;
+
+            if (key == ConsoleKey.UpArrow)
+            {
+                selectedIndex--;
+                if (selectedIndex < 0)
+                {
+                    selectedIndex = menu.Count -1;
+                }
+            }
+            if (key == ConsoleKey.DownArrow)
+            {
+                selectedIndex++;
+                if (selectedIndex >= menu.Count)
+                {
+                    selectedIndex = 0;
+                }
+            }
+
+            if (key == ConsoleKey.Enter)
+            {
+                switch(selectedIndex)
+                {
+                    case 0:
+                        Console.CursorVisible = true;
+                        string? description = Prompt("Enter task description: ");
+                        _service.AddTask(description);
+                        break;
+                    case 1:
+                        Console.CursorVisible = true;
+                        int idToRemove = int.TryParse(Prompt("Enter task id to remove: "), out int removeId) ? removeId : 0;
+                        _service.RemoveTask(idToRemove);
+                        break;
+                    case 2:
+                        Console.CursorVisible = true;
+                        string? idToToggle = Prompt("Enter task id to toggle completion: ");
+                        if(int.TryParse(idToToggle, out int toggleId)){
+                            _service.ToggleTaskCompletion(toggleId);
+                        }
+                        break;
+                    case 3:
+                        return;
+                }
+            }
+
         }
     }
 }
