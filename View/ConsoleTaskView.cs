@@ -56,7 +56,8 @@ public class ConsoleTaskView : ITaskView
             System.Console.WriteLine("2. Remove task");
             System.Console.WriteLine("3. Toggle task completion");
             System.Console.WriteLine("4. Filter by completion");
-            System.Console.WriteLine("5. Exit");
+            System.Console.WriteLine("5. Sort tasks A-Z");
+            System.Console.WriteLine("6. Exit");
 
             string? option = Prompt("select an option: ");
             switch (option)
@@ -93,6 +94,11 @@ public class ConsoleTaskView : ITaskView
                     }
                     break;
                 case "5":
+                    var tasks = _service.GetAllTasks();
+                    tasks.Sort((a, b) => a.Description.CompareTo(b.Description));
+                    Prompt("taken gesorteerd op A-Z. Druk op een toets om door te gaan...");
+                    break;
+                case "6":
                     return;
                 default:
                     Console.WriteLine("Invalid option. Press any key to continue...");
