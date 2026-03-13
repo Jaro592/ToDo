@@ -49,10 +49,11 @@ public class ConsoleTaskView : ITaskView
     
         while (true)
         {
-            DisplayTasks(_service.GetAllTasks());
+            var tmp = _service.GetAllTasks();
+            DisplayTasks(tmp);
 
             int menuStartLine = Console.CursorTop + 1;
-            int selectedIndex = NavigateMenu(menu, menuStartLine);
+            int selectedIndex = NavigateMenu(menu, menuStartLine, false);
 
             switch (selectedIndex)
             {
@@ -61,19 +62,28 @@ public class ConsoleTaskView : ITaskView
                     _service.AddTask(description);
                     break;
                 case 1:
-
-                    while (true)
+                    MyArray<TaskItem> tasks = (MyArray<TaskItem>)_service.GetAllTasks();
+                    if (tasks.Count == 0)
                     {
-                        NavigateMenu((MyArray<TaskItem>)_service.GetAllTasks(), 0);
+                        System.Console.WriteLine("\nThere are no tasks to delete, press enter to continue");
+                        System.Console.ReadKey();
+                        break;
                     }
-                    string? idToRemove = Prompt("\nEnter task id to remove: ");
-                    if (int.TryParse(idToRemove, out int removeId))
-                        _service.RemoveTask(removeId);
+                    int idxTasks = NavigateMenu(tasks, 0);
+                    TaskItem selectedTask = tasks[idxTasks];
+                    _service.RemoveTask(selectedTask.ID);
                     break;
                 case 2:
-                    string? idToToggle = Prompt("\nEnter task id to toggle completion: ");
-                    if (int.TryParse(idToToggle, out int toggleId))
-                        _service.ToggleTaskCompletion(toggleId);
+                    MyArray<TaskItem> tasksToggle = (MyArray<TaskItem>)_service.GetAllTasks();
+                    if (tasksToggle.Count == 0)
+                    {
+                        System.Console.WriteLine("\nThere are no tasks to toggle, press enter to continue");
+                        System.Console.ReadKey();
+                        break;
+                    }
+                    int idxTasksToggle = NavigateMenu(tasksToggle, 0);
+                    TaskItem selectedTaskToggle = tasksToggle[idxTasksToggle];
+                    _service.ToggleTaskCompletion(selectedTaskToggle.ID);
                     break;
                 case 3:
                     return;
@@ -81,37 +91,46 @@ public class ConsoleTaskView : ITaskView
         }
     }
 
-    private int NavigateMenu(MyArray<TaskItem> options, int startLine)
+    private int NavigateMenu<T>(MyArray<T> options, int startLine, bool clear = true) where T : IEquatable<T>
     {
+
+        
         int selectedIndex = 0;
         ConsoleKey key;
+
+        if (clear)
+        {
+            Console.Clear();
+        }
 
         Console.CursorVisible = false;
 
         while (true)
         {
-
             for (int i = 0; i < options.Count; i++)
             {
                 Console.SetCursorPosition(0, startLine + i);
+
                 if (i == selectedIndex)
                     Console.Write($"> {options[i]}   ");
                 else
                     Console.Write($"  {options[i]}   ");
             }
-
+            
             ConsoleKeyInfo keyInfo = Console.ReadKey(true);
             key = keyInfo.Key;
 
             if (key == ConsoleKey.UpArrow)
             {
                 selectedIndex--;
-                if (selectedIndex < 0) selectedIndex = options.Count - 1;
+                if (selectedIndex < 0)
+                    selectedIndex = options.Count - 1;
             }
             else if (key == ConsoleKey.DownArrow)
             {
                 selectedIndex++;
-                if (selectedIndex >= options.Count) selectedIndex = 0;
+                if (selectedIndex >= options.Count)
+                    selectedIndex = 0;
             }
             else if (key == ConsoleKey.Enter)
             {
