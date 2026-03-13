@@ -107,9 +107,8 @@ public class MyLinkedList<T> : IMyCollection<T>
     }
     void Sort(Comparison<T> comparison)
     {
-<<<<<<< HEAD
-        return;
-=======
+
+
         if (First is null) return;
 
         Node<T>? current = First;
@@ -129,7 +128,6 @@ public class MyLinkedList<T> : IMyCollection<T>
         } while (swapped);
         _dirty = true;
 
->>>>>>> 1c60544 (linked list sort)
     }
 
 
@@ -163,7 +161,7 @@ public class MyLinkedList<T> : IMyCollection<T>
     {
         return _current != null;
     }
-    public  T Next()
+    public T Next()
     {
         if (!Hasnext()) return default!;
         T data = _current.Data;
