@@ -8,5 +8,4 @@ public class Node<T>
         Next = next;
     }
 
-
 }
