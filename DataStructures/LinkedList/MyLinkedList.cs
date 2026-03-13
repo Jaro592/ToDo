@@ -1,4 +1,4 @@
-public class MyLinkedList<T> : IMyCollection<T>
+public class MyLinkedList<T> : IMyCollection<T>, IMyIterator<T> where T : IEquatable<T>
 {
 
     private int _count;
@@ -7,7 +7,7 @@ public class MyLinkedList<T> : IMyCollection<T>
     public int Count { get => _count; }
     public bool Dirty { get => _dirty; }
 
-    private Node _current;
+    private Node<T>? _current;
 
     // private Node<T> _node;
 
@@ -41,7 +41,7 @@ public class MyLinkedList<T> : IMyCollection<T>
         _dirty = true;
     }
 
-    void Remove(T item)
+    public void Remove(T item)
     {
         if (First is null) return;
 
@@ -52,7 +52,7 @@ public class MyLinkedList<T> : IMyCollection<T>
             _dirty = true;
             return;
         }
-        Node<T> current = First;
+        Node<T>? current = First;
         while (current.Next is not null)
         {
             if (current.Next.Data.Equals(item))
@@ -67,13 +67,14 @@ public class MyLinkedList<T> : IMyCollection<T>
 
 
     }
-    T FindBy<K>(K key, Func<T, K, bool> Comparer)
+    // T? FindBy<K>(K key, Func<T, K, int> Comparer); // MyCollectio
+    public T FindBy<K>(K key, Func<T, K, int> Comparer)
     {
         Node<T>? current = First;
 
         while (current != null)
         {
-            if (Comparer(current.Data, key))
+            if (Comparer(current.Data, key) == 0)
             {
                 return current.Data;
             }
@@ -82,9 +83,9 @@ public class MyLinkedList<T> : IMyCollection<T>
 
         throw new InvalidOperationException("Item not found");
     }
-    IMyCollection<T> Filter(Func<T, bool> predicate)
+    public IMyCollection<T> Filter(Func<T, bool> predicate)
     {
-        IMyCollection<T> result = new MyCollection<T>();
+        IMyCollection<T> result = new MyLinkedList<T>();
         if (First is null) return result;
 
         Node<T>? current = First;
@@ -105,22 +106,23 @@ public class MyLinkedList<T> : IMyCollection<T>
         a.Data = b.Data;
         b.Data = temp;
     }
-    void Sort(Comparison<T> comparison)
+    public void Sort(Comparison<T> comparison)
     {
 
 
         if (First is null) return;
 
-        Node<T>? current = First;
         bool swapped;
         do
         {
+            Node<T>? current = First;
             swapped = false;
-            while (current.Next is not null)
+            while (current?.Next is not null)
             {
                 if (comparison(current.Data, current.Next.Data) > 0)
                 {
                     Swap(current, current.Next);
+                    swapped = true;
 
                 }
                 current = current.Next;
@@ -131,9 +133,18 @@ public class MyLinkedList<T> : IMyCollection<T>
     }
 
 
-    R Reduce<R>(R initial, Func<R, T, R> accumulator)
+    public R Reduce<R>(R initial, Func<R, T, R> accumulator)
     {
-        return default;
+        R result = initial;
+        if (First is null) return result;
+
+        Node<T>? current = First;
+        while (current is not null)
+        {
+            result = accumulator(result, current.Data);
+            current = current.Next;
+        }
+        return result;
     }
 
     // public R Reduce<R>(R initial, Func<R, T, R> accumulator)
@@ -157,13 +168,13 @@ public class MyLinkedList<T> : IMyCollection<T>
         return this;
     }
 
-    public bool Hasnext()
+    public bool HasNext()
     {
         return _current != null;
     }
     public T Next()
     {
-        if (!Hasnext()) return default!;
+        if (!HasNext()) return default!;
         T data = _current.Data;
         _current = _current.Next;
         return data;
