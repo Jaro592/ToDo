@@ -46,8 +46,10 @@ public class ConsoleTaskView : ITaskView
         menu.Add("Add task");
         menu.Add("Remove task");
         menu.Add("Toggle task completion");
+        menu.Add("Add user");
+        menu.Add("Assign task to user");
         menu.Add("Exit");
-    
+
         while (true)
         {
             var tmp = _service.GetAllTasks();
@@ -87,6 +89,27 @@ public class ConsoleTaskView : ITaskView
                     _service.ToggleTaskCompletion(selectedTaskToggle.ID);
                     break;
                 case 3:
+                    string? name = Prompt("\nEnter user name: ");
+                    _service.AddUser(name);
+                    break;
+                case 4:
+                    MyArray<TaskItem> tasksAssign = (MyArray<TaskItem>)_service.GetAllTasks();
+                    if (tasksAssign.Count == 0)
+                    {
+                        Console.WriteLine("There are no tasks");
+                        Console.ReadKey();
+                        break;
+
+                    }
+                    int idx = NavigateMenu(tasksAssign, 0);
+                    TaskItem task = tasksAssign[idx];
+
+                    Console.Write("\nEnter user name: ");
+                    string? userName = Console.ReadLine();
+
+                    _service.AssignTaskToUser(task.ID, userName);
+                    break;
+                case 5:
                     return;
             }
         }
@@ -95,7 +118,7 @@ public class ConsoleTaskView : ITaskView
     private int NavigateMenu<T>(MyArray<T> options, int startLine, bool clear = true) where T : IEquatable<T>
     {
 
-        
+
         int selectedIndex = 0;
         ConsoleKey key;
 
@@ -117,7 +140,7 @@ public class ConsoleTaskView : ITaskView
                 else
                     Console.Write($"  {options[i]}   ");
             }
-            
+
             ConsoleKeyInfo keyInfo = Console.ReadKey(true);
             key = keyInfo.Key;
 

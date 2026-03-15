@@ -2,31 +2,37 @@
   {
     "ID": 1,
     "Description": "yo",
-    "Completed": true
+    "Completed": true,
+    "AssignedUser": null
   },
   {
     "ID": 2,
     "Description": "fix format",
-    "Completed": true
+    "Completed": true,
+    "AssignedUser": null
   },
   {
     "ID": 3,
     "Description": "testing this new addition",
-    "Completed": true
+    "Completed": true,
+    "AssignedUser": "Basel"
   },
   {
     "ID": 4,
     "Description": "asdasdasdasdasd",
-    "Completed": true
+    "Completed": true,
+    "AssignedUser": null
   },
   {
     "ID": 5,
     "Description": "Formatting fixes",
-    "Completed": false
+    "Completed": false,
+    "AssignedUser": null
   },
   {
     "ID": 6,
     "Description": "tag person to task",
-    "Completed": false
+    "Completed": false,
+    "AssignedUser": null
   }
 ]
