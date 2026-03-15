@@ -53,9 +53,14 @@ class TaskSerivce : ITaskService
         _users.Add(user);
     }
 
-    public User FindUser(string name)
+    public User? FindUser(string name)
     {
-        return _users.FindBy(name, (k, key) => k.Name.CompareTo(key));
+        var i = _users.FindBy(name, (k, key) => k.Name.CompareTo(key));
+        if (i != null)
+        {
+            return i;
+        }
+        return default!;
     }
 
 

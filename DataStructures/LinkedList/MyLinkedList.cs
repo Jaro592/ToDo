@@ -81,7 +81,8 @@ public class MyLinkedList<T> : IMyCollection<T>, IMyIterator<T> where T : IEquat
             current = current.Next;
         }
 
-        throw new InvalidOperationException("Item not found");
+        return default!;
+
     }
     public IMyCollection<T> Filter(Func<T, bool> predicate)
     {
