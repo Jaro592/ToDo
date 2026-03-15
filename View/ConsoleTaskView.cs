@@ -108,6 +108,7 @@ public class ConsoleTaskView : ITaskView
                     string? userName = Console.ReadLine();
 
                     _service.AssignTaskToUser(task.ID, userName);
+
                     break;
                 case 5:
                     return;

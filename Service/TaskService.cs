@@ -69,7 +69,12 @@ class TaskSerivce : ITaskService
     {
         var task = _tasks.FindBy(taskId, (t, key) => t.ID.CompareTo(key));
         var user = FindUser(userName);
-
+        if (user == null)
+        {
+            Console.WriteLine("User not found.");
+            Console.ReadKey();
+            return;
+        }
         if (task != null && user != null)
         {
             user.Tasks.Add(task);
