@@ -3,26 +3,57 @@
 class TaskSerivce : ITaskService
 {
     private readonly ITaskRepository _repository;
-    private readonly MyArray<TaskItem> _tasks;
+    private readonly IMyCollection<TaskItem> _tasks;
     private MyLinkedList<User> _users;
+    private int maxId = 0;
 
     public TaskSerivce(ITaskRepository repository)
     {
         _repository = repository;
         _tasks = _repository.LoadTasks();
         _users = new MyLinkedList<User>();
-
+        maxId = GetInitialMaxId();
     }
     public IMyCollection<TaskItem> GetAllTasks() => _tasks;
+
+    private int GetInitialMaxId()
+    {
+        int max = 0;
+        var it = _tasks.GetIterator();
+        it.Reset();
+        while (it.HasNext())
+        {
+            int currentId = it.Next().ID;
+            if (currentId > max) max = currentId;
+        }
+        return max;
+    }
 
     public void AddTask(string? description)
     {
         if (string.IsNullOrWhiteSpace(description)) return;
-        int newId = _tasks.Count > 0 ? _tasks[_tasks.Count - 1].ID + 1 : 1;
-        var newTask = new TaskItem { ID = newId, Description = description, Completed = false };
+        var it = _tasks.GetIterator();
+        it.Reset();
+        while (it.HasNext())
+        {
+            if (it.Next().Description.Equals(description, StringComparison.OrdinalIgnoreCase))
+            {
+                Console.WriteLine("Fout: Deze taak bestaat al!");
+                return; 
+            }
+        }
+
+        maxId++; 
+        
+        var newTask = new TaskItem 
+        { 
+            ID = maxId, 
+            Description = description, 
+            Completed = false 
+        };
+
         _tasks.Add(newTask);
         _repository.SaveTasks(_tasks);
-
     }
     public void RemoveTask(int id)
     {
