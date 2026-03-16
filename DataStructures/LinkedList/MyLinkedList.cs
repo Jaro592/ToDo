@@ -176,6 +176,7 @@ public class MyLinkedList<T> : IMyCollection<T>, IMyIterator<T> where T : IEquat
     public T Next()
     {
         if (!HasNext()) return default!;
+        if (_current == null) return default!;
         T data = _current.Data;
         _current = _current.Next;
         return data;

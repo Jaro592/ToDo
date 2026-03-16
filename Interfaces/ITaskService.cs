@@ -8,7 +8,7 @@ public interface ITaskService
     void ToggleTaskCompletion(int id);
 
     void AddUser(string name);
-    User FindUser(string name);
+    User? FindUser(string name);
     void AssignTaskToUser(int taskId, string userName);
 
 }

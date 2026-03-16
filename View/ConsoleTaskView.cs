@@ -90,6 +90,12 @@ public class ConsoleTaskView : ITaskView
                     break;
                 case 3:
                     string? name = Prompt("\nEnter user name: ");
+                    if (string.IsNullOrWhiteSpace(name))
+                    {
+                        Console.WriteLine("Invalid name, press enter to continue");
+                        Console.ReadKey();
+                        break;
+                    }
                     _service.AddUser(name);
                     break;
                 case 4:
@@ -106,6 +112,12 @@ public class ConsoleTaskView : ITaskView
 
                     Console.Write("\nEnter user name: ");
                     string? userName = Console.ReadLine();
+                    if (string.IsNullOrWhiteSpace(userName))
+                    {
+                        Console.WriteLine("Invalid name, press enter to continue");
+                        Console.ReadKey();
+                        break;
+                    }
 
                     _service.AssignTaskToUser(task.ID, userName);
 
