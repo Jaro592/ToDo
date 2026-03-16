@@ -109,8 +109,6 @@ public class MyLinkedList<T> : IMyCollection<T>, IMyIterator<T> where T : IEquat
     }
     public void Sort(Comparison<T> comparison)
     {
-
-
         if (First is null) return;
 
         bool swapped;
