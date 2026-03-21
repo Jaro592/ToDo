@@ -10,7 +10,7 @@ public class ConsoleTaskView : ITaskView
         _service = service;
     }
 
-    private void DisplayTasks(IMyCollection<TaskItem> tasks)
+    private void DisplayTasks(IMyCollection<TaskItem> tasks) //akif
     {
         Console.Clear();
         Console.WriteLine("=== ToDo List ===\n");
@@ -33,16 +33,16 @@ public class ConsoleTaskView : ITaskView
         }
     }
 
-    private string? Prompt(string prompt)
+    private string? Prompt(string prompt) //akif
     {
         Console.CursorVisible = true;
         Console.Write(prompt);
         return Console.ReadLine() ?? "";
     }
 
-    public void Run()
+    public void Run() //akif
     {
-        MyArray<string> menu = new MyArray<string>();
+        IMyCollection<string> menu = new MyArray<string>();
         menu.Add("Add task");
         menu.Add("Remove task");
         menu.Add("Toggle task completion");
@@ -64,30 +64,33 @@ public class ConsoleTaskView : ITaskView
                     string? description = Prompt("\nEnter task description: ");
                     _service.AddTask(description);
                     break;
+
                 case 1:
-                    MyArray<TaskItem> tasks = (MyArray<TaskItem>)_service.GetAllTasks();
+                    IMyCollection<TaskItem> tasks = _service.GetAllTasks();
                     if (tasks.Count == 0)
                     {
-                        System.Console.WriteLine("\nThere are no tasks to delete, press enter to continue");
-                        System.Console.ReadKey();
+                        Console.WriteLine("\nThere are no tasks to delete, press enter to continue");
+                        Console.ReadKey();
                         break;
                     }
                     int idxTasks = NavigateMenu(tasks, 0);
-                    TaskItem selectedTask = tasks[idxTasks];
+                    TaskItem selectedTask = GetAtIndex(tasks, idxTasks);
                     _service.RemoveTask(selectedTask.ID);
                     break;
+
                 case 2:
-                    MyArray<TaskItem> tasksToggle = (MyArray<TaskItem>)_service.GetAllTasks();
+                    IMyCollection<TaskItem> tasksToggle = _service.GetAllTasks();
                     if (tasksToggle.Count == 0)
                     {
-                        System.Console.WriteLine("\nThere are no tasks to toggle, press enter to continue");
-                        System.Console.ReadKey();
+                        Console.WriteLine("\nThere are no tasks to toggle, press enter to continue");
+                        Console.ReadKey();
                         break;
                     }
                     int idxTasksToggle = NavigateMenu(tasksToggle, 0);
-                    TaskItem selectedTaskToggle = tasksToggle[idxTasksToggle];
+                    TaskItem selectedTaskToggle = GetAtIndex(tasksToggle, idxTasksToggle);
                     _service.ToggleTaskCompletion(selectedTaskToggle.ID);
                     break;
+
                 case 3:
                     string? name = Prompt("\nEnter user name: ");
                     if (string.IsNullOrWhiteSpace(name))
@@ -98,17 +101,18 @@ public class ConsoleTaskView : ITaskView
                     }
                     _service.AddUser(name);
                     break;
+
                 case 4:
-                    MyArray<TaskItem> tasksAssign = (MyArray<TaskItem>)_service.GetAllTasks();
+                    IMyCollection<TaskItem> tasksAssign = _service.GetAllTasks();
                     if (tasksAssign.Count == 0)
                     {
                         Console.WriteLine("There are no tasks");
                         Console.ReadKey();
                         break;
-
                     }
+
                     int idx = NavigateMenu(tasksAssign, 0);
-                    TaskItem task = tasksAssign[idx];
+                    TaskItem task = GetAtIndex(tasksAssign, idx);
 
                     Console.Write("\nEnter user name: ");
                     string? userName = Console.ReadLine();
@@ -120,38 +124,57 @@ public class ConsoleTaskView : ITaskView
                     }
 
                     _service.AssignTaskToUser(task.ID, userName);
-
                     break;
+
                 case 5:
                     return;
             }
         }
     }
 
-    private int NavigateMenu<T>(MyArray<T> options, int startLine, bool clear = true) where T : IEquatable<T>
+    private T GetAtIndex<T>(IMyCollection<T> collection, int index) //akif
     {
+        var it = collection.GetIterator();
+        int i = 0;
 
+        while (it.HasNext())
+        {
+            var item = it.Next();
+            if (i == index)
+                return item;
+            i++;
+        }
 
+        throw new Exception("Index out of range");
+    }
+
+    private int NavigateMenu<T>(IMyCollection<T> options, int startLine, bool clear = true) //akif
+    {
         int selectedIndex = 0;
         ConsoleKey key;
 
         if (clear)
-        {
             Console.Clear();
-        }
 
         Console.CursorVisible = false;
 
         while (true)
         {
-            for (int i = 0; i < options.Count; i++)
+            var iterator = options.GetIterator();
+            int i = 0;
+
+            while (iterator.HasNext())
             {
+                var item = iterator.Next();
+
                 Console.SetCursorPosition(0, startLine + i);
 
                 if (i == selectedIndex)
-                    Console.Write($"> {options[i]}   ");
+                    Console.Write($"> {item}   ");
                 else
-                    Console.Write($"  {options[i]}   ");
+                    Console.Write($"  {item}   ");
+
+                i++;
             }
 
             ConsoleKeyInfo keyInfo = Console.ReadKey(true);
@@ -177,3 +200,8 @@ public class ConsoleTaskView : ITaskView
         }
     }
 }
+
+// note:
+// The view depends only on the collection interface and uses iterators 
+// instead of indexing so it works with any collection implementation 
+// like arrays, linked lists, or other data structures.
