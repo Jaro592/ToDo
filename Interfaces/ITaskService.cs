@@ -7,8 +7,8 @@ public interface ITaskService
     void RemoveTask(int id);
     void ToggleTaskCompletion(int id);
 
-    void AddUser(string name);
-    User FindUser(string name);
-    void AssignTaskToUser(int taskId, string userName);
+    // void AddUser(string name);
+    // User FindUser(string name);
+    // void AssignTaskToUser(int taskId, string userName);
 
 }

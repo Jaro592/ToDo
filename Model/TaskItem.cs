@@ -3,7 +3,7 @@ public class TaskItem : IEquatable<TaskItem>
     public int ID { get; set; }
     public required string Description { get; set; }
     public bool Completed { get; set; }
-    public string? AssignedUser { get; set; }
+    // public string? AssignedUser { get; set; }
 
     public override bool Equals(object? obj)
     {

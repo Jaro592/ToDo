@@ -1,17 +1,17 @@
-using System.Collections.Generic;
+// using System.Collections.Generic;
 using System.Reflection.Metadata;
 
 class TaskSerivce : ITaskService
 {
     private readonly ITaskRepository _repository;
     private readonly MyArray<TaskItem> _tasks;
-    private MyLinkedList<User> _users;
+    // private MyLinkedList<User> _users;
 
     public TaskSerivce(ITaskRepository repository)
     {
         _repository = repository;
         _tasks = _repository.LoadTasks();
-        _users = new MyLinkedList<User>();
+        // _users = new MyLinkedList<User>();
 
     }
     public IMyCollection<TaskItem> GetAllTasks() => _tasks;
@@ -47,41 +47,37 @@ class TaskSerivce : ITaskService
         }
     }
 
-    public void AddUser(string name)
-    {
-        var user = new User(name);
-        _users.Add(user);
-    }
+    // public void AddUser(string name)
+    // {
+    //     var user = new User(name);
+    //     _users.Add(user);
+    // }
 
-    public User? FindUser(string name)
-    {
-        var i = _users.FindBy(name, (k, key) => k.Name.CompareTo(key));
-        if (i != null)
-        {
-            return i;
-        }
-        return default!;
-    }
+    // public User? FindUser(string name)
+    // {
+    //     return _users.FindBy(name, (k, key) => k.Name.CompareTo(key));
+
+    // }
 
 
 
-    public void AssignTaskToUser(int taskId, string userName)
-    {
-        var task = _tasks.FindBy(taskId, (t, key) => t.ID.CompareTo(key));
-        var user = FindUser(userName);
-        if (user == null)
-        {
-            Console.WriteLine("User not found.");
-            Console.ReadKey();
-            return;
-        }
-        if (task != null && user != null)
-        {
-            user.Tasks.Add(task);
-            task.AssignedUser = userName;
-            _repository.SaveTasks(_tasks);
-        }
-    }
+    // public void AssignTaskToUser(int taskId, string userName)
+    // {
+    //     var task = _tasks.FindBy(taskId, (t, key) => t.ID.CompareTo(key));
+    //     var user = FindUser(userName);
+    //     if (user == null)
+    //     {
+    //         Console.WriteLine("User not found.");
+    //         Console.ReadKey();
+    //         return;
+    //     }
+    //     if (task != null && user != null)
+    //     {
+    //         user.Tasks.Add(task);
+    //         task.AssignedUser = userName;
+    //         _repository.SaveTasks(_tasks);
+    //     }
+    // }
 
 
 

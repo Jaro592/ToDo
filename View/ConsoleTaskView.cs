@@ -4,10 +4,15 @@ using System.Linq.Expressions;
 public class ConsoleTaskView : ITaskView
 {
     private readonly ITaskService _service;
+    private readonly IUserService _useservice;
+    private readonly ITaskUserService _taskUserService;
 
-    public ConsoleTaskView(ITaskService service)
+
+    public ConsoleTaskView(ITaskService service, IUserService useservice, ITaskUserService taskUserService)
     {
         _service = service;
+        _useservice = useservice;
+        _taskUserService = taskUserService;
     }
 
     private void DisplayTasks(IMyCollection<TaskItem> tasks)
@@ -90,24 +95,66 @@ public class ConsoleTaskView : ITaskView
                     break;
                 case 3:
                     string? name = Prompt("\nEnter user name: ");
-                    _service.AddUser(name);
+                    _useservice.AddUser(name);
                     break;
                 case 4:
-                    MyArray<TaskItem> tasksAssign = (MyArray<TaskItem>)_service.GetAllTasks();
+
+                    var tasksAssign = _service.GetAllTasks();
                     if (tasksAssign.Count == 0)
                     {
                         Console.WriteLine("There are no tasks");
                         Console.ReadKey();
                         break;
-
                     }
                     int idx = NavigateMenu(tasksAssign, 0);
-                    TaskItem task = tasksAssign[idx];
+                    // TaskItem task = tasksAssign[idx];
 
-                    Console.Write("\nEnter user name: ");
-                    string? userName = Console.ReadLine();
+                    var taskIterator = tasksAssign.GetIterator();
+                    int j = 0;
+                    TaskItem selectedTaskAssign = null!;
+                    while (taskIterator.HasNext())
+                    {
+                        var task = taskIterator.Next();
+                        if (j == idx)
+                        {
+                            selectedTaskAssign = task;
+                            break;
+                        }
+                        j++;
+                    }
 
-                    _service.AssignTaskToUser(task.ID, userName);
+                    var users = _useservice.GetAllUsers();
+                    if (users.Count == 0)
+                    {
+                        Console.WriteLine("There aro no users");
+                        Console.Clear();
+                        break;
+                    }
+
+                    int userIdx = NavigateMenu(users, 0);
+
+                    var iterator = users.GetIterator();
+                    int i = 0;
+                    User selectedUser = null!;
+                    while (iterator.HasNext())
+                    {
+                        var u = iterator.Next();
+                        if (i == userIdx)
+                        {
+                            selectedUser = u;
+                            break;
+                        }
+                        i++;
+                    }
+                    if (selectedTaskAssign == null || selectedUser == null)
+                    {
+                        Console.WriteLine("Something went wrong");
+                        Console.ReadKey();
+                        break;
+                    }
+
+
+                    _taskUserService.Assign(selectedTaskAssign.ID, selectedUser.UserID);
 
                     break;
                 case 5:
