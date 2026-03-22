@@ -4,14 +4,14 @@ using System.Linq.Expressions;
 public class ConsoleTaskView : ITaskView
 {
     private readonly ITaskService _service;
-    private readonly IUserService _useservice;
+    private readonly IUserService _userService;
     private readonly ITaskUserService _taskUserService;
 
 
-    public ConsoleTaskView(ITaskService service, IUserService useservice, ITaskUserService taskUserService)
+    public ConsoleTaskView(ITaskService service, IUserService userService, ITaskUserService taskUserService)
     {
         _service = service;
-        _useservice = useservice;
+        _userService = userService;
         _taskUserService = taskUserService;
     }
 
@@ -95,7 +95,7 @@ public class ConsoleTaskView : ITaskView
                     break;
                 case 3:
                     string? name = Prompt("\nEnter user name: ");
-                    _useservice.AddUser(name);
+                    _userService.AddUser(name);
                     break;
                 case 4:
 
@@ -123,7 +123,7 @@ public class ConsoleTaskView : ITaskView
                         j++;
                     }
 
-                    var users = _useservice.GetAllUsers();
+                    var users = _userService.GetAllUsers();
                     if (users.Count == 0)
                     {
                         Console.WriteLine("There aro no users");
