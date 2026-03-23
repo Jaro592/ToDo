@@ -11,13 +11,6 @@ public class Serialize // jaro
         return $"{timestamp}_{randomNumber}_{anotherOne}";
 
     }
-    // this is orderable with the following method (but then ofc not using list)
 
-    
-    // public List<ToDoTask> GetSortedTasks()
-    // {
-    //     // Omdat de string begint met de datum, zet OrderBy ze chronologisch
-    //     return _tasks.OrderBy(t => t.ID).ToList();
-    // }
     
 }

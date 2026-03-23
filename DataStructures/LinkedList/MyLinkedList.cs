@@ -1,4 +1,4 @@
-public class MyLinkedList<T> : IMyCollection<T>, IMyIterator<T> where T : IEquatable<T>
+public sealed class MyLinkedList<T> : IMyCollection<T>, IMyIterator<T> where T : IEquatable<T>
 {
 
     private int _count;

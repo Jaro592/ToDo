@@ -1,4 +1,4 @@
-public class Node<T>
+public sealed class Node<T>
 {
     public T Data;
     public Node<T>? Next;
