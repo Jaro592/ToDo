@@ -1,12 +1,12 @@
 public class User : IEquatable<User>
 {
+    public Guid UserID { get; set; } // jaro
     public string Name { get; set; }
-    public IMyCollection<TaskItem> Tasks { get; set; }
 
     public User(string name)
     {
         Name = name;
-        Tasks = new MyArray<TaskItem>();
+
     }
 
     public bool Equals(User? other)

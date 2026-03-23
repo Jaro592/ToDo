@@ -1,68 +1,12 @@
 [
   {
-    "ID": 1,
-    "Description": "uiiiiii",
-    "Completed": false,
-    "AssignedUser": null
+    "ID": "0a6a61de-9fcb-4d98-a756-553ce164a86c",
+    "Description": "jeehe",
+    "Completed": true
   },
   {
-    "ID": 2,
-    "Description": "fix format",
-    "Completed": true,
-    "AssignedUser": null
-  },
-  {
-    "ID": 2,
-    "Description": "yu",
-    "Completed": false,
-    "AssignedUser": null
-  },
-  {
-    "ID": 3,
-    "Description": "testing this new addition",
-    "Completed": true,
-    "AssignedUser": "Basel"
-  },
-  {
-    "ID": 4,
-    "Description": "asdasdasdasdasd",
-    "Completed": true,
-    "AssignedUser": null
-  },
-  {
-    "ID": 5,
-    "Description": "Formatting fixes",
-    "Completed": false,
-    "AssignedUser": null
-  },
-  {
-    "ID": 6,
-    "Description": "tag person to task",
-    "Completed": false,
-    "AssignedUser": null
-  },
-  {
-    "ID": 7,
-    "Description": "ui",
-    "Completed": false,
-    "AssignedUser": null
-  },
-  {
-    "ID": 8,
-    "Description": "uiiiii",
-    "Completed": false,
-    "AssignedUser": null
-  },
-  {
-    "ID": 9,
-    "Description": "eeeeee",
-    "Completed": false,
-    "AssignedUser": null
-  },
-  {
-    "ID": 12,
-    "Description": "tttttest",
-    "Completed": false,
-    "AssignedUser": null
+    "ID": "79f12856-e195-40b1-8249-2dfe80aba8a2",
+    "Description": "ejee",
+    "Completed": false
   }
 ]
