@@ -4,7 +4,7 @@ public class TaskUserService : ITaskUserService
     public TaskUserService(ITaskUserRepository taskUserRepository) =>
     _taskUserRepository = taskUserRepository;
 
-    public void Assign(Guid taskId, Guid userId) // Basel x changes by jaro
+    public void Assign(string taskId, string userId) // Basel x changes by jaro
     {
         var userTask = _taskUserRepository.Load();
         var relation = new TaskUser

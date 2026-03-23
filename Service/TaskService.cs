@@ -1,4 +1,4 @@
-class TaskSerivce : ITaskService
+class TaskSerivce : Serialize,ITaskService
 {
     private readonly ITaskRepository _repository;
     private readonly IMyCollection<TaskItem> _tasks;
@@ -16,12 +16,12 @@ class TaskSerivce : ITaskService
     public void AddTask(string? description)
     {
         if (string.IsNullOrWhiteSpace(description)) return;
-        Guid newId = GenerateGUID(); // jaro
+        string newId = NewSerializeString(); // jaro
         var newTask = new TaskItem { ID = newId, Description = description, Completed = false };
         _tasks.Add(newTask);
         _repository.SaveTasks(_tasks);
     }
-    public void RemoveTask(Guid id)
+    public void RemoveTask(string id)
     {
         var task = _tasks.FindBy(id, (t, key) => t.ID.CompareTo(key));
 
@@ -32,7 +32,7 @@ class TaskSerivce : ITaskService
         }
     }
 
-    public void ToggleTaskCompletion(Guid id)
+    public void ToggleTaskCompletion(string id)
     {
         var task = _tasks.FindBy(id, (t, key) => t.ID.CompareTo(key));
 
@@ -42,9 +42,9 @@ class TaskSerivce : ITaskService
             _repository.SaveTasks(_tasks);
         }
     }
-    private Guid GenerateGUID() //jaro
-    {
-        return Guid.NewGuid();
-    }
+    // private Guid GenerateGUID() //jaro
+    // {
+    //     return Guid.NewGuid();
+    // }
 
 }
