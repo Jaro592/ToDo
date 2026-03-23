@@ -1,26 +1,26 @@
-public class TaskItem : IEquatable<TaskItem>
+public class TaskItem : IEquatable<TaskItem> // jaro
 {
-    public Guid ID { get; set; }
+    public Guid ID { get; set; } // jaro
     public required string Description { get; set; }
     public bool Completed { get; set; }
     // public string? AssignedUser { get; set; }
 
-    public override bool Equals(object? obj)
+    public override bool Equals(object? obj) // jaro
     {
         return Equals(obj as TaskItem);
     }
 
-    public bool Equals(TaskItem? other)
+    public bool Equals(TaskItem? other) // jaro
     {
         return other != null && ID == other.ID;
     }
 
-    public override int GetHashCode()
+    public override int GetHashCode() // jaro
     {
         return ID.GetHashCode();
     }
 
-    public override string ToString()
+    public override string ToString() // jaro
     {
         return $"{Description} - {(Completed ? "Done" : "in progress")}";
     }

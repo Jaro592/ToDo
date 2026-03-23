@@ -22,26 +22,10 @@ public class UserService : IUserService
 
     }
 
-
     public IMyCollection<User> GetAllUsers()
     {
         return _userRepository.LoadUsers();
     }
-
-    // private int GenerateId(IMyCollection<User> users)
-    // {
-    //     int maxId = 0;
-    //     var iterator = users.GetIterator();
-    //     while (iterator.HasNext())
-    //     {
-    //         var user = iterator.Next();
-    //         if (user.UserID > maxId)
-    //         {
-    //             maxId = user.UserID;
-    //         }
-    //     }
-    //     return maxId += 1;
-    // }
 
     private Guid GenerateGUID() // jaro
     {

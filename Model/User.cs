@@ -1,6 +1,6 @@
 public class User : IEquatable<User>
 {
-    public Guid UserID { get; set; }
+    public Guid UserID { get; set; } // jaro
     public string Name { get; set; }
 
     public User(string name)
