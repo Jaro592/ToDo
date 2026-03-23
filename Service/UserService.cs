@@ -8,7 +8,7 @@ public class UserService : IUserService
     public void AddUser(string name)
     {
         var users = _userRepository.LoadUsers();
-        int newId = GenerateId(users);
+        Guid newId = GenerateGUID();
         var user = new User(name);
         user.UserID = newId;
         users.Add(user);
@@ -28,18 +28,23 @@ public class UserService : IUserService
         return _userRepository.LoadUsers();
     }
 
-    private int GenerateId(IMyCollection<User> users)
+    // private int GenerateId(IMyCollection<User> users)
+    // {
+    //     int maxId = 0;
+    //     var iterator = users.GetIterator();
+    //     while (iterator.HasNext())
+    //     {
+    //         var user = iterator.Next();
+    //         if (user.UserID > maxId)
+    //         {
+    //             maxId = user.UserID;
+    //         }
+    //     }
+    //     return maxId += 1;
+    // }
+
+    private Guid GenerateGUID() // jaro
     {
-        int maxId = 0;
-        var iterator = users.GetIterator();
-        while (iterator.HasNext())
-        {
-            var user = iterator.Next();
-            if (user.UserID > maxId)
-            {
-                maxId = user.UserID;
-            }
-        }
-        return maxId += 1;
+        return Guid.NewGuid();
     }
 }

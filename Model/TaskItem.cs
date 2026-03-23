@@ -1,6 +1,6 @@
 public class TaskItem : IEquatable<TaskItem>
 {
-    public int ID { get; set; }
+    public Guid ID { get; set; }
     public required string Description { get; set; }
     public bool Completed { get; set; }
     // public string? AssignedUser { get; set; }
@@ -22,6 +22,6 @@ public class TaskItem : IEquatable<TaskItem>
 
     public override string ToString()
     {
-        return $"[{ID}] {Description} - {(Completed ? "Done" : "in progress")}";
+        return $"{Description} - {(Completed ? "Done" : "in progress")}";
     }
 }
