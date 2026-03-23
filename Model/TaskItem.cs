@@ -1,6 +1,6 @@
 public class TaskItem : IEquatable<TaskItem> // jaro
 {
-    public Guid ID { get; set; } // jaro
+    public string ID { get; set; } // jaro
     public required string Description { get; set; }
     public bool Completed { get; set; }
     // public string? AssignedUser { get; set; }

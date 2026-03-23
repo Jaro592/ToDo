@@ -1,7 +1,7 @@
 public class TaskUser : IEquatable<TaskUser>
 {
-    public Guid TaskID { get; set; }
-    public Guid UserID { get; set; }
+    public string TaskID { get; set; }
+    public string UserID { get; set; }
 
     public bool Equals(TaskUser? other)
     {

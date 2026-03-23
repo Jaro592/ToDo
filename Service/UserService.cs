@@ -1,4 +1,4 @@
-public class UserService : IUserService
+public class UserService : Serialize, IUserService
 {
 
     private readonly IUserRepository _userRepository;
@@ -8,7 +8,7 @@ public class UserService : IUserService
     public void AddUser(string name)
     {
         var users = _userRepository.LoadUsers();
-        Guid newId = GenerateGUID();
+        string newId = NewSerializeString();
         var user = new User(name);
         user.UserID = newId;
         users.Add(user);
@@ -27,8 +27,8 @@ public class UserService : IUserService
         return _userRepository.LoadUsers();
     }
 
-    private Guid GenerateGUID() // jaro
-    {
-        return Guid.NewGuid();
-    }
+    // private Guid GenerateGUID() // jaro
+    // {
+    //     return Guid.NewGuid();
+    // }
 }
