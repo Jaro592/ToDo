@@ -2,34 +2,21 @@
 {
     static void Main(string[] args)
     {
-        // var list = new MyLinkedList<int>();
-
-        // list.Add(1);
-        // list.Add(2);
-        // list.Add(3);
-
-        // list.Remove(2);
-
-        // Console.WriteLine("Count: " + list.Count);
-
-        // Console.WriteLine("Press any key to continue...");
-        // Console.ReadKey();
-
-        // var found = list.FindBy(3, (value, key) => value.CompareTo(key));
-        // Console.WriteLine("Found: " + found);
-        // Console.WriteLine("Press any key to continue...");
-        // Console.ReadKey();
 
 
-        // int sum = list.Reduce(0, (acc, x) => acc + x);
-        // Console.WriteLine("Sum: " + sum);
-        // Console.WriteLine("Press any key to continue...");
-        // Console.ReadKey();
+        string taskFilePath = "tasks.json";
+        string userFilePath = "user.json";
+        string taskUserFilePath = "task_users.json";
 
-        string filePath = "tasks.json";
-        ITaskRepository repository = new JsonTaskRepository(filePath);
-        ITaskService service = new TaskSerivce(repository);
-        ITaskView view = new ConsoleTaskView(service);
+        ITaskRepository taskrepository = new JsonTaskRepository(taskFilePath);
+        IUserRepository userrepository = new JsonUserRepository(userFilePath);
+        ITaskUserRepository taskUserRepository = new JsonTaskUserRepository(taskUserFilePath);
+
+        ITaskService taskService = new TaskSerivce(taskrepository);
+        IUserService userService = new UserService(userrepository);
+        ITaskUserService taskUserService = new TaskUserService(taskUserRepository);
+
+        ITaskView view = new ConsoleTaskView(taskService, userService, taskUserService);
         //IMyCollection<TaskItem> tasks = new MyCollection<TaskItem>(repository.LoadTasks());
 
 

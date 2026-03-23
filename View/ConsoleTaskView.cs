@@ -4,10 +4,15 @@ using System.Linq.Expressions;
 public class ConsoleTaskView : ITaskView
 {
     private readonly ITaskService _service;
+    private readonly IUserService _userService;
+    private readonly ITaskUserService _taskUserService;
 
-    public ConsoleTaskView(ITaskService service)
+
+    public ConsoleTaskView(ITaskService service, IUserService userService, ITaskUserService taskUserService)
     {
         _service = service;
+        _userService = userService;
+        _taskUserService = taskUserService;
     }
 
     private void DisplayTasks(IMyCollection<TaskItem> tasks) //akif
@@ -99,11 +104,12 @@ public class ConsoleTaskView : ITaskView
                         Console.ReadKey();
                         break;
                     }
-                    _service.AddUser(name);
+                    _userService.AddUser(name);
                     break;
 
                 case 4:
-                    IMyCollection<TaskItem> tasksAssign = _service.GetAllTasks();
+
+                    var tasksAssign = _service.GetAllTasks();
                     if (tasksAssign.Count == 0)
                     {
                         Console.WriteLine("There are no tasks");
@@ -112,18 +118,55 @@ public class ConsoleTaskView : ITaskView
                     }
 
                     int idx = NavigateMenu(tasksAssign, 0);
-                    TaskItem task = GetAtIndex(tasksAssign, idx);
+                    // TaskItem task = tasksAssign[idx];
 
-                    Console.Write("\nEnter user name: ");
-                    string? userName = Console.ReadLine();
-                    if (string.IsNullOrWhiteSpace(userName))
+                    var taskIterator = tasksAssign.GetIterator();
+                    int j = 0;
+                    TaskItem selectedTaskAssign = null!;
+                    while (taskIterator.HasNext())
                     {
-                        Console.WriteLine("Invalid name, press enter to continue");
+                        var task = taskIterator.Next();
+                        if (j == idx)
+                        {
+                            selectedTaskAssign = task;
+                            break;
+                        }
+                        j++;
+                    }
+
+                    var users = _userService.GetAllUsers();
+                    if (users.Count == 0)
+                    {
+                        Console.WriteLine("There aro no users");
+                        Console.Clear();
+                        break;
+                    }
+
+                    int userIdx = NavigateMenu(users, 0);
+
+                    var iterator = users.GetIterator();
+                    int i = 0;
+                    User selectedUser = null!;
+                    while (iterator.HasNext())
+                    {
+                        var u = iterator.Next();
+                        if (i == userIdx)
+                        {
+                            selectedUser = u;
+                            break;
+                        }
+                        i++;
+                    }
+                    if (selectedTaskAssign == null || selectedUser == null)
+                    {
+                        Console.WriteLine("Something went wrong");
                         Console.ReadKey();
                         break;
                     }
 
-                    _service.AssignTaskToUser(task.ID, userName);
+
+                    _taskUserService.Assign(selectedTaskAssign.ID, selectedUser.UserID);
+
                     break;
 
                 case 5:

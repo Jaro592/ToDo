@@ -146,16 +146,6 @@ public class MyLinkedList<T> : IMyCollection<T>, IMyIterator<T> where T : IEquat
         return result;
     }
 
-    // public R Reduce<R>(R initial, Func<R, T, R> accumulator)
-    // {
-    //     R result = initial;
-    //     for (int i = 0; i <= _index; i++)
-    //     {
-    //         result = accumulator(result, _data[i]);
-    //     }
-    //     return result;
-    // }
-
     public IMyIterator<T> GetIterator()
     {
         Reset();
