@@ -1,4 +1,4 @@
-// class BSTAVL<T> : IMyCollection<T> where T : IComparable<T> 
+// class BSTAVL<T> : IMyCollection<T> where T : IComparable<T>  // jaro
 // {
 //     public class Node 
 //     {
