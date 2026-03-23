@@ -16,13 +16,12 @@ class TaskSerivce : ITaskService
     public void AddTask(string? description)
     {
         if (string.IsNullOrWhiteSpace(description)) return;
-        int newId = _tasks.Count > 0 ? _tasks[_tasks.Count - 1].ID + 1 : 1;
+        Guid newId = GenerateGUID(); // jaro
         var newTask = new TaskItem { ID = newId, Description = description, Completed = false };
         _tasks.Add(newTask);
         _repository.SaveTasks(_tasks);
-
     }
-    public void RemoveTask(int id)
+    public void RemoveTask(Guid id)
     {
         var task = _tasks.FindBy(id, (t, key) => t.ID.CompareTo(key));
 
@@ -33,7 +32,7 @@ class TaskSerivce : ITaskService
         }
     }
 
-    public void ToggleTaskCompletion(int id)
+    public void ToggleTaskCompletion(Guid id)
     {
         var task = _tasks.FindBy(id, (t, key) => t.ID.CompareTo(key));
 
@@ -43,39 +42,9 @@ class TaskSerivce : ITaskService
             _repository.SaveTasks(_tasks);
         }
     }
-
-    // public void AddUser(string name)
-    // {
-    //     var user = new User(name);
-    //     _users.Add(user);
-    // }
-
-    // public User? FindUser(string name)
-    // {
-    //     return _users.FindBy(name, (k, key) => k.Name.CompareTo(key));
-
-    // }
-
-
-
-    // public void AssignTaskToUser(int taskId, string userName)
-    // {
-    //     var task = _tasks.FindBy(taskId, (t, key) => t.ID.CompareTo(key));
-    //     var user = FindUser(userName);
-    //     if (user == null)
-    //     {
-    //         Console.WriteLine("User not found.");
-    //         Console.ReadKey();
-    //         return;
-    //     }
-    //     if (task != null && user != null)
-    //     {
-    //         user.Tasks.Add(task);
-    //         task.AssignedUser = userName;
-    //         _repository.SaveTasks(_tasks);
-    //     }
-    // }
-
-
+    private Guid GenerateGUID() //jaro
+    {
+        return Guid.NewGuid();
+    }
 
 }

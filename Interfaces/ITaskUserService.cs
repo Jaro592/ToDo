@@ -1,6 +1,6 @@
 public interface ITaskUserService
 {
-    void Assign(int taskId, int userId);
+    void Assign(Guid taskId, Guid userId);
 
     // IMyCollection<TaskItem> GetTasksForUser(int userId);
 
