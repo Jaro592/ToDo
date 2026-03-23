@@ -1,8 +1,8 @@
 class TaskSerivce : ITaskService
 {
     private readonly ITaskRepository _repository;
-    private readonly MyArray<TaskItem> _tasks;
-    // private MyLinkedList<User> _users;
+    private readonly IMyCollection<TaskItem> _tasks;
+    private MyLinkedList<User> _users;
 
     public TaskSerivce(ITaskRepository repository)
     {

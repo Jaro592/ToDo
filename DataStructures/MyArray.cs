@@ -8,16 +8,6 @@ public sealed class MyArray<T> : IMyCollection<T>, IMyIterator<T> where T : IEqu
     private int _iteratorIndex = -1;
     private bool _isDirty = false;
 
-    public T[] Data 
-    { 
-        get 
-        {
-            T[] result = new T[Count];
-            Array.Copy(_data, result, Count);
-            return result;
-        }
-    }
-
     public int LastIndex => _index;
 
     public MyArray(int size = 10)
@@ -27,7 +17,7 @@ public sealed class MyArray<T> : IMyCollection<T>, IMyIterator<T> where T : IEqu
         _index = -1;
     }
 
-    public MyArray(T[] data, int lastIndex)
+    private MyArray(T[] data, int lastIndex)
     {
         _data = data ?? new T[10];
         _index = lastIndex;
@@ -51,7 +41,7 @@ public sealed class MyArray<T> : IMyCollection<T>, IMyIterator<T> where T : IEqu
     public int Count {get => _index + 1;}
     public bool Dirty {get => _isDirty == false;}
 
-    public T[] Resize(T[] arr)
+    private T[] Resize(T[] arr)
     {
         T[] newData = new T[_data.Length * 2];
         for (int i = 0; i <= _index; i++) newData[i] = _data[i];
@@ -111,7 +101,7 @@ public sealed class MyArray<T> : IMyCollection<T>, IMyIterator<T> where T : IEqu
 
     public IMyCollection<T> Filter(Func<T, bool> predicate)
     {
-        MyArray<T> result = new MyArray<T>(_data.Length);
+        var result = new MyArray<T>(_data.Length);
         for (int i = 0; i <= _index; i++)
         {
             if (predicate(_data[i]))
