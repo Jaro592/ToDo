@@ -37,4 +37,19 @@ class JsonTaskRepository : ITaskRepository
         string json = JsonSerializer.Serialize(taskItems, new JsonSerializerOptions { WriteIndented = true });
         File.WriteAllText(_filePath, json);
     }
+
+    public TaskItem GetById(string taskId) // Jaro
+    {
+        var allTasks = this.LoadTasks();
+        var iterator = allTasks.GetIterator();
+        while (iterator.HasNext())
+        {
+            var currentTask = iterator.Next();
+            if (currentTask.ID == taskId) 
+            {
+                return currentTask;
+            }
+        }
+        return null;
+    }
 }

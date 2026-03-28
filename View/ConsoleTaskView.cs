@@ -53,6 +53,7 @@ public class ConsoleTaskView : ITaskView
         menu.Add("Toggle task completion");
         menu.Add("Add user");
         menu.Add("Assign task to user");
+        menu.Add("View tasks for user");
         menu.Add("Exit");
 
         while (true)
@@ -170,6 +171,43 @@ public class ConsoleTaskView : ITaskView
                     break;
 
                 case 5:
+                    var usersView = _userService.GetAllUsers(); // Jaro
+                    if (usersView.Count == 0)
+                    {
+                        Console.WriteLine("There are no users");
+                        Console.ReadKey();
+                        break;
+                    }
+
+                    int userIdxView = NavigateMenu(usersView, 0);
+
+                    var iteratorView = usersView.GetIterator();
+                    int iView = 0;
+                    User selectedUserView = null!;
+                    while (iteratorView.HasNext())
+                    {
+                        var u = iteratorView.Next();
+                        if (iView == userIdxView)
+                        {
+                            selectedUserView = u;
+                            break;
+                        }
+                        iView++;
+                    }
+                    if (selectedUserView == null)
+                    {
+                        Console.WriteLine("Something went wrong");
+                        Console.ReadKey();
+                        break;
+                    }
+
+                    var tasksForUser = _taskUserService.GetTasksForUser(selectedUserView.UserID);
+                    DisplayTasks(tasksForUser);
+                    Console.WriteLine($"\nTasks for {selectedUserView}:");
+                    Console.WriteLine("\nPress enter to continue");
+                    Console.ReadKey();
+                    break;
+                case 6:
                     return;
             }
         }
