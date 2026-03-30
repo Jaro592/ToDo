@@ -1,3 +1,5 @@
+using System.Reflection.Metadata.Ecma335;
+
 public class UserService : Serialize, IUserService
 {
 
@@ -17,7 +19,7 @@ public class UserService : Serialize, IUserService
 
     public User? FindUser(string name)
     {
-        var users = _userRepository.LoadUsers();
+        var users = GetAllUsers(); // changed from var users = _userRepository.LoadUsers(); to use the already existing function (GetAllUsers) that does the same -akif
         return users.FindBy(name, (k, key) => k.Name.CompareTo(key));
 
     }
@@ -27,6 +29,20 @@ public class UserService : Serialize, IUserService
         return _userRepository.LoadUsers();
     }
 
+    public bool DeleteUser(string name) //akif
+    {
+        if (string.IsNullOrWhiteSpace(name))
+            return false;
+
+        var user = FindUser(name);
+        if (user == null)
+            return false;
+
+        var users = GetAllUsers();
+        users.Remove(user);
+        _userRepository.SaveUsers(users);
+        return true;
+    }
     // private Guid GenerateGUID() // jaro
     // {
     //     return Guid.NewGuid();
