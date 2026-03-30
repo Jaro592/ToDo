@@ -48,13 +48,14 @@ public class ConsoleTaskView : ITaskView
     public void Run() //akif
     {
         IMyCollection<string> menu = new MyArray<string>();
-        menu.Add("Add task"); //0
-        menu.Add("Remove task"); //1
-        menu.Add("Toggle task completion"); //2
-        menu.Add("Add user"); //3
+        menu.Add("Add task");//0
+        menu.Add("Remove task");//1
+        menu.Add("Toggle task completion");//2
+        menu.Add("Add user");//3
         menu.Add("Assign task to user"); //4
-        menu.Add("Remove user"); //5
-        menu.Add("Exit"); //6
+        menu.Add("View tasks for user"); // 5
+        menu.Add("Remove user"); //6
+        menu.Add("Exit"); // 7
 
         while (true)
         {
@@ -201,6 +202,43 @@ public class ConsoleTaskView : ITaskView
 
                     break;
                 case 5:
+                    var usersView = _userService.GetAllUsers(); // Jaro
+                    if (usersView.Count == 0)
+                    {
+                        Console.WriteLine("There are no users");
+                        Console.ReadKey();
+                        break;
+                    }
+
+                    int userIdxView = NavigateMenu(usersView, 0);
+
+                    var iteratorView = usersView.GetIterator();
+                    int iView = 0;
+                    User selectedUserView = null!;
+                    while (iteratorView.HasNext())
+                    {
+                        var u = iteratorView.Next();
+                        if (iView == userIdxView)
+                        {
+                            selectedUserView = u;
+                            break;
+                        }
+                        iView++;
+                    }
+                    if (selectedUserView == null)
+                    {
+                        Console.WriteLine("Something went wrong");
+                        Console.ReadKey();
+                        break;
+                    }
+
+                    var tasksForUser = _taskUserService.GetTasksForUser(selectedUserView.UserID);
+                    DisplayTasks(tasksForUser);
+                    Console.WriteLine($"\nTasks for {selectedUserView}:");
+                    Console.WriteLine("\nPress enter to continue");
+                    Console.ReadKey();
+                    break;
+                case 6:
                     var usersForDeletion = _userService.GetAllUsers();
                     if (usersForDeletion.Count == 0)
                     {
@@ -222,7 +260,7 @@ public class ConsoleTaskView : ITaskView
 
 
                     break;
-                case 6:
+                case 7:
                     return;
             }
         }

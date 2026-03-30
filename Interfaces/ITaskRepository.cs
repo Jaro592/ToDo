@@ -1,7 +1,8 @@
 using System.Collections.Generic;
 
-interface ITaskRepository
+public interface ITaskRepository // jaro
 {
-    IMyCollection<TaskItem> LoadTasks(); // I mycollection instead of list
-    void SaveTasks(IMyCollection<TaskItem> tasks); // I mycollection instead of list
+    IMyCollection<TaskItem> LoadTasks(); // I mycollection instead of list jaro
+    void SaveTasks(IMyCollection<TaskItem> tasks); // I mycollection instead of list jaro
+    TaskItem GetById(string taskId); // Jaro
 }
