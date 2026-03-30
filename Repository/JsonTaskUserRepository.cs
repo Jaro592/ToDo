@@ -46,17 +46,14 @@ public class JsonTaskUserRepository : ITaskUserRepository
     public IMyCollection<string> GetTasksForUser(string userId) // Jaro
     {
         var allRelations = Load(); 
-        IMyCollection<string> taskIds = new MyLinkedList<string>();
-
-        var iterator = allRelations.GetIterator();
-        while (iterator.HasNext())
+        IMyCollection<string> startLijst = new MyLinkedList<string>();
+        return allRelations.Reduce(startLijst, (huidigeLijst, relation) => 
         {
-            var relation = iterator.Next();
             if (relation.UserID == userId)
             {
-                taskIds.Add(relation.TaskID);
+                huidigeLijst.Add(relation.TaskID);
             }
-        }
-        return taskIds;
+            return huidigeLijst;
+        });
     }
 }
