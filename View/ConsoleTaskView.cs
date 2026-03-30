@@ -260,7 +260,7 @@ public class ConsoleTaskView : ITaskView
 
 
                     break;
-                case 6:
+                case 7:
                     return;
             }
         }
