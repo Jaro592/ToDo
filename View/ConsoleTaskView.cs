@@ -48,12 +48,13 @@ public class ConsoleTaskView : ITaskView
     public void Run() //akif
     {
         IMyCollection<string> menu = new MyArray<string>();
-        menu.Add("Add task");
-        menu.Add("Remove task");
-        menu.Add("Toggle task completion");
-        menu.Add("Add user");
-        menu.Add("Assign task to user");
-        menu.Add("Exit");
+        menu.Add("Add task"); //0
+        menu.Add("Remove task"); //1
+        menu.Add("Toggle task completion"); //2
+        menu.Add("Add user"); //3
+        menu.Add("Assign task to user"); //4
+        menu.Add("Remove user"); //5
+        menu.Add("Exit"); //6
 
         while (true)
         {
@@ -66,7 +67,13 @@ public class ConsoleTaskView : ITaskView
             switch (selectedIndex)
             {
                 case 0:
-                    string? description = Prompt("\nEnter task description: ");
+                    string? description = Prompt("\nEnter task description: (type :qa to exit)\n>");
+                    if (description == ":qa")
+                    {
+                        System.Console.WriteLine("no task added, press enter to continue");
+                        Console.ReadKey();
+                        break;
+                    }
                     _service.AddTask(description);
                     break;
 
@@ -79,6 +86,12 @@ public class ConsoleTaskView : ITaskView
                         break;
                     }
                     int idxTasks = NavigateMenu(tasks, 0);
+                    if (idxTasks == -1)
+                    {
+                        System.Console.WriteLine("\nNo task selected, press any enter to continue");
+                        Console.ReadKey();
+                        break;
+                    }
                     TaskItem selectedTask = GetAtIndex(tasks, idxTasks);
                     _service.RemoveTask(selectedTask.ID);
                     break;
@@ -92,6 +105,12 @@ public class ConsoleTaskView : ITaskView
                         break;
                     }
                     int idxTasksToggle = NavigateMenu(tasksToggle, 0);
+                    if (idxTasksToggle == -1)
+                    {
+                        System.Console.WriteLine("\nNo task selected, press enter to continue");
+                        Console.ReadKey();
+                        break;
+                    }
                     TaskItem selectedTaskToggle = GetAtIndex(tasksToggle, idxTasksToggle);
                     _service.ToggleTaskCompletion(selectedTaskToggle.ID);
                     break;
@@ -100,7 +119,7 @@ public class ConsoleTaskView : ITaskView
                     string? name = Prompt("\nEnter user name: ");
                     if (string.IsNullOrWhiteSpace(name))
                     {
-                        Console.WriteLine("Invalid name, press enter to continue");
+                        Console.WriteLine("\nInvalid name, press enter to continue");
                         Console.ReadKey();
                         break;
                     }
@@ -112,13 +131,19 @@ public class ConsoleTaskView : ITaskView
                     var tasksAssign = _service.GetAllTasks();
                     if (tasksAssign.Count == 0)
                     {
-                        Console.WriteLine("There are no tasks");
+                        Console.WriteLine("\nThere are no tasks");
                         Console.ReadKey();
                         break;
                     }
 
                     int idx = NavigateMenu(tasksAssign, 0);
                     // TaskItem task = tasksAssign[idx];
+                    if (idx == -1)
+                    {
+                        System.Console.WriteLine("\nNo task selected, press enter to continue");
+                        Console.ReadKey();
+                        break;
+                    }
 
                     var taskIterator = tasksAssign.GetIterator();
                     int j = 0;
@@ -137,12 +162,19 @@ public class ConsoleTaskView : ITaskView
                     var users = _userService.GetAllUsers();
                     if (users.Count == 0)
                     {
-                        Console.WriteLine("There aro no users");
+                        Console.WriteLine("\nThere are no users");
                         Console.Clear();
                         break;
                     }
 
                     int userIdx = NavigateMenu(users, 0);
+
+                    if (userIdx == -1)
+                    {
+                        System.Console.WriteLine("\nNo user selected, press enter to continue");
+                        Console.ReadKey();
+                        break;
+                    }
 
                     var iterator = users.GetIterator();
                     int i = 0;
@@ -159,7 +191,7 @@ public class ConsoleTaskView : ITaskView
                     }
                     if (selectedTaskAssign == null || selectedUser == null)
                     {
-                        Console.WriteLine("Something went wrong");
+                        Console.WriteLine("\nSomething went wrong");
                         Console.ReadKey();
                         break;
                     }
@@ -168,8 +200,29 @@ public class ConsoleTaskView : ITaskView
                     _taskUserService.Assign(selectedTaskAssign.ID, selectedUser.UserID);
 
                     break;
-
                 case 5:
+                    var usersForDeletion = _userService.GetAllUsers();
+                    if (usersForDeletion.Count == 0)
+                    {
+                        System.Console.WriteLine("\nThere are no users to delete, press enter to continue.");
+                        Console.ReadKey();
+                        break;
+                    }
+                    int selectedIndexDeletion = NavigateMenu(usersForDeletion, 0);
+                    if (selectedIndexDeletion == -1)
+                    {
+                        System.Console.WriteLine("\nNo user selected, press enter to continue");
+                        Console.ReadKey();
+                        break;
+                    }
+                    var userDeletion = GetAtIndex(usersForDeletion, selectedIndexDeletion);
+                    _userService.DeleteUser(userDeletion.Name);                        
+
+                    System.Console.WriteLine("\nNothing to do.");
+
+
+                    break;
+                case 6:
                     return;
             }
         }
@@ -191,9 +244,9 @@ public class ConsoleTaskView : ITaskView
         throw new Exception("Index out of range");
     }
 
-    private int NavigateMenu<T>(IMyCollection<T> options, int startLine, bool clear = true) //akif
+    private int NavigateMenu<T>(IMyCollection<T> options, int startLine, bool clear = true, int startingIndex = 0) //akif
     {
-        int selectedIndex = 0;
+        int selectedIndex = startingIndex;
         ConsoleKey key;
 
         if (clear)
@@ -239,6 +292,10 @@ public class ConsoleTaskView : ITaskView
             {
                 Console.CursorVisible = true;
                 return selectedIndex;
+            }
+            else if (key == ConsoleKey.Escape)
+            {
+                return -1;
             }
         }
     }
