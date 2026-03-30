@@ -27,15 +27,15 @@ public class TaskUserService : ITaskUserService
         IMyCollection<TaskItem> tasksForUser = new MyLinkedList<TaskItem>();
         
         var iterator = taskIds.GetIterator();
-        while (iterator.HasNext())
+        return taskIds.Reduce(tasksForUser, (huidigeLijst, taskId) => 
         {
-            string taskId = iterator.Next();
             TaskItem realTask = _taskRepository.GetById(taskId);
+            
             if (realTask != null)
             {
-                tasksForUser.Add(realTask);
+                huidigeLijst.Add(realTask);
             }
-        }
-        return tasksForUser;
+            return huidigeLijst; 
+        });
     }
 }
