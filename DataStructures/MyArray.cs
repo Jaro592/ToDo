@@ -163,11 +163,46 @@ public sealed class MyArray<T> : IMyCollection<T>, IMyIterator<T> where T : IEqu
     public int Find(T Item, int startIndex = 0)
     {
         if (startIndex < 0 || startIndex > _index) return -1;
+        if (IsSorted()) return BSFind(Item);
         for (int i = startIndex; i <= _index; i++)
         {
             if (_data[i] != null && _data[i].Equals(Item)) return i;
         }
         return -1;
+    }
+
+
+    private int BSFind(T item, IComparer<T>? comparer = null)
+    {
+        comparer ??= Comparer<T>.Default;
+
+        int left = 0;
+        int right = _index;
+
+        while (left <= right)
+        {
+            int mid = left + (right - left) / 2;
+            int cmp = comparer.Compare(_data[mid], item);
+
+            if (cmp == 0) return mid;
+            else if (cmp < 0) left = mid + 1;
+            else right = mid - 1;
+        }
+
+        return -1;
+    }
+
+    public bool IsSorted(IComparer<T>? comparer = null)
+    {
+        comparer ??= Comparer<T>.Default;
+
+        for (int i = 1; i <= _index; i++)
+        {
+            if (comparer.Compare(_data[i - 1], _data[i]) > 0)
+                return false;
+        }
+
+        return true;
     }
 
     public void Swap(int i, int j)
