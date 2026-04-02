@@ -7,6 +7,7 @@ public sealed class MyArray<T> : IMyCollection<T>, IMyIterator<T> where T : IEqu
     private int _index;
     private int _iteratorIndex = -1;
     private bool _isDirty = false;
+    private bool _isSorted = true; //akif
 
     public int LastIndex => _index;
 
@@ -60,6 +61,41 @@ public sealed class MyArray<T> : IMyCollection<T>, IMyIterator<T> where T : IEqu
         _index++;
         _data[_index] = item;
         _isDirty = true;
+        _isSorted = false; //akif
+    }
+
+    public void AddSorted(T item, IComparer<T>? comparer = null) //akif
+    {
+        if (item == null) return;
+
+        comparer ??= Comparer<T>.Default;
+
+        if (_index + 1 >= _data.Length)
+            Resize(_data);
+
+        int insertIndex = 0;
+
+        int left = 0;
+        int right = _index;
+
+        while (left <= right)
+        {
+            int mid = left + (right - left) / 2;
+            if (comparer.Compare(_data[mid], item) < 0)
+                left = mid + 1;
+            else
+                right = mid - 1;
+        }
+
+        insertIndex = left;
+
+        Shift(insertIndex, true);
+
+        _data[insertIndex] = item;
+
+        _index++;
+        _isDirty = true;
+        _isSorted = true;
     }
 
     public void Remove(T item)
@@ -125,6 +161,7 @@ public sealed class MyArray<T> : IMyCollection<T>, IMyIterator<T> where T : IEqu
             }
         }
         _isDirty = true;
+        _isSorted = true; //akif
     }
 
     public R Reduce<R>(R initial, Func<R, T, R> accumulator)
@@ -163,7 +200,7 @@ public sealed class MyArray<T> : IMyCollection<T>, IMyIterator<T> where T : IEqu
     public int Find(T Item, int startIndex = 0)
     {
         if (startIndex < 0 || startIndex > _index) return -1;
-        if (IsSorted()) return BSFind(Item); // akif
+        if (_isSorted) return BSFind(Item); // akif
         for (int i = startIndex; i <= _index; i++)
         {
             if (_data[i] != null && _data[i].Equals(Item)) return i;
