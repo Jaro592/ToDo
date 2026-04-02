@@ -163,7 +163,7 @@ public sealed class MyArray<T> : IMyCollection<T>, IMyIterator<T> where T : IEqu
     public int Find(T Item, int startIndex = 0)
     {
         if (startIndex < 0 || startIndex > _index) return -1;
-        if (IsSorted()) return BSFind(Item);
+        if (IsSorted()) return BSFind(Item); // akif
         for (int i = startIndex; i <= _index; i++)
         {
             if (_data[i] != null && _data[i].Equals(Item)) return i;
@@ -172,7 +172,7 @@ public sealed class MyArray<T> : IMyCollection<T>, IMyIterator<T> where T : IEqu
     }
 
 
-    private int BSFind(T item, IComparer<T>? comparer = null)
+    private int BSFind(T item, IComparer<T>? comparer = null) //akif
     {
         comparer ??= Comparer<T>.Default;
 
@@ -192,7 +192,7 @@ public sealed class MyArray<T> : IMyCollection<T>, IMyIterator<T> where T : IEqu
         return -1;
     }
 
-    public bool IsSorted(IComparer<T>? comparer = null)
+    public bool IsSorted(IComparer<T>? comparer = null) // akif
     {
         comparer ??= Comparer<T>.Default;
 
