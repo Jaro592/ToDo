@@ -1,4 +1,4 @@
-public sealed class Node<T>
+public sealed class Node<T> // Basel
 {
     public T Data;
     public Node<T>? Next;

@@ -54,8 +54,9 @@ public class ConsoleTaskView : ITaskView
         menu.Add("Add user");//3
         menu.Add("Assign task to user"); //4
         menu.Add("View tasks for user"); // 5
-        menu.Add("Remove user"); //6
-        menu.Add("Exit"); // 7
+        menu.Add("View users for task"); // 6
+        menu.Add("Remove user"); //7
+        menu.Add("Exit"); // 8
 
         while (true)
         {
@@ -239,6 +240,48 @@ public class ConsoleTaskView : ITaskView
                     Console.ReadKey();
                     break;
                 case 6:
+                    var tasksView = _service.GetAllTasks();
+                    if (tasksView.Count == 0)
+                    {
+                        Console.WriteLine("There are no tasks");
+                        Console.ReadKey();
+                        break;
+                    }
+                    int taskIdx = NavigateMenu(tasksView, 0);
+                    TaskItem selectedTaskView = GetAtIndex(tasksView, taskIdx);
+                    Console.Clear();
+                    var usersForTask = _taskUserService.GetUsersForTask(selectedTaskView.ID);
+                    if (usersForTask.Count == 0)
+                    {
+                        Console.ForegroundColor = ConsoleColor.Red;
+                        Console.WriteLine("No users assigned to this task.");
+                        Console.ResetColor();
+                    }
+                    else
+                    {
+                        Console.ForegroundColor = ConsoleColor.Green;
+                        Console.Write($"Users for this task: ");
+                        Console.ForegroundColor = ConsoleColor.Cyan;
+                        // Console.WriteLine($"{selectedTaskView.Description}");
+                        // Console.ResetColor();
+
+                        var iteratorUsers = usersForTask.GetIterator();
+
+                        while (iteratorUsers.HasNext())
+                        {
+                            var user = iteratorUsers.Next();
+                            Console.WriteLine(user.Name);
+                        }
+                        Console.ResetColor();
+                    }
+
+                    Console.WriteLine("Press enter to continue");
+                    Console.ReadKey();
+                    break;
+
+
+
+                case 7:
                     var usersForDeletion = _userService.GetAllUsers();
                     if (usersForDeletion.Count == 0)
                     {
@@ -254,13 +297,13 @@ public class ConsoleTaskView : ITaskView
                         break;
                     }
                     var userDeletion = GetAtIndex(usersForDeletion, selectedIndexDeletion);
-                    _userService.DeleteUser(userDeletion.Name);                        
+                    _userService.DeleteUser(userDeletion.Name);
 
                     System.Console.WriteLine("\nNothing to do.");
 
 
                     break;
-                case 7:
+                case 8:
                     return;
             }
         }
