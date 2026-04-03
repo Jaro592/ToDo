@@ -2,8 +2,8 @@
 {
     static void Main(string[] args)
     {
-        Bstview();
-        //StartApp();
+        //Bstview();
+        StartApp();
     }
 
     private static void StartApp()

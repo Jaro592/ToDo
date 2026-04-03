@@ -12,15 +12,16 @@ public class BSTAVL<T> : IMyCollection<T>, IMyIterator<T> where T : IComparable<
             _count = 0;
             current = null;
         }
-        public void Add(T item)
+        public void Add(T item) // Jaro
         {
             _tree.Root = _tree.Insert(_tree.Root, item);
             _count++;
+            IsDirty = true;
         }
         public void Remove(T item)
         {
         }
-        public T? FindBy<K>(K key, Func<T,K,int> Comparer) // O(log n)
+        public T? FindBy<K>(K key, Func<T,K,int> Comparer) // O(log n) Jaro
         {
             Node<T>? current = _tree.Root;
             while (current != null)
@@ -52,36 +53,36 @@ public class BSTAVL<T> : IMyCollection<T>, IMyIterator<T> where T : IComparable<
         {
             return initial;
         }
-        public IMyIterator<T> GetIterator()
+        public IMyIterator<T> GetIterator() // jaro
         {
             return this;
         }
-        public IMyCollection<T> GetEnumerator()
+        public IMyCollection<T> GetEnumerator() // jaro
         {
             return this;
         }
-        public bool HasNext()
+        public bool HasNext() // Jaro
         {
             return current != null;
         }
-        public T Next()
+        public T Next() // moet nog aan worden gewerkt, dit is een simpele inorder traversal maar we moeten ook de stack bijhouden
         {
             if (!HasNext()) return default!;
             T value = current.Value;
-            current = current.Right ?? current.Left; // This is a very simplified in-order traversal, you would need to implement a proper stack-based traversal for a real implementation
+            current = current.Right ?? current.Left;
             return value;
         }
-        public void Reset()
+        public void Reset() // Jaro
         {
             current = _tree.Root;
         }
 
-        public void PrintTree()
+        public void PrintTree() // Jaro
         {
             _tree.Display(_tree.Root);
         }
 }
-    public class Node<T>
+    public class Node<T> // Jaro
     {
         public T Value;
         public int Height;
@@ -96,9 +97,9 @@ public class BSTAVL<T> : IMyCollection<T>, IMyIterator<T> where T : IComparable<
         }
     }
 
-    public class AVLTree<T> where T : IComparable<T> {
+    public class AVLTree<T> where T : IComparable<T> { // Jaro
     public Node<T> Root;
-    public Node<T> Insert(Node<T> node, T value)
+    public Node<T> Insert(Node<T> node, T value) // Jaro
     {
         if (node == null) {
             return new Node<T>(value);
@@ -134,15 +135,15 @@ public class BSTAVL<T> : IMyCollection<T>, IMyIterator<T> where T : IComparable<
         }
         return node;
     }
-    private int GetHeight(Node<T> node) {
+    private int GetHeight(Node<T> node) { // Jaro
         if (node == null) return 0;
         return node.Height;
     }
-    private int GetBalanceFactor(Node<T> node) {
+    private int GetBalanceFactor(Node<T> node) { // Jaro
         if (node == null) return 0;
         return GetHeight(node.Left) - GetHeight(node.Right);
     }
-    private Node<T> RotateRight(Node<T> y) {
+    private Node<T> RotateRight(Node<T> y) { // Jaro
         Node<T> x = y.Left;
         Node<T> T3 = x.Right;
         x.Right = y;
@@ -157,7 +158,7 @@ public class BSTAVL<T> : IMyCollection<T>, IMyIterator<T> where T : IComparable<
         x.Height = 1 + (xlefth > xrightH ? xlefth : xrightH);
         return x;
     }
-    private Node<T> RotateLeft(Node<T> x) {
+    private Node<T> RotateLeft(Node<T> x) { // Jaro
         Node<T> y = x.Right;
         Node<T> T2 = y.Left;
         y.Left = x;
@@ -173,7 +174,7 @@ public class BSTAVL<T> : IMyCollection<T>, IMyIterator<T> where T : IComparable<
 
         return y;
     }
-        public void Display(Node<T> root)
+        public void Display(Node<T> root) // Jaro
         {
             if (root != null) {
                 Display(root.Left);
