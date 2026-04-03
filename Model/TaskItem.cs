@@ -1,4 +1,4 @@
-public class TaskItem : IEquatable<TaskItem> // jaro
+public class TaskItem : IEquatable<TaskItem>, IComparable<TaskItem> // jaro
 {
     public string ID { get; set; } // jaro
     public required string Description { get; set; }
@@ -8,6 +8,12 @@ public class TaskItem : IEquatable<TaskItem> // jaro
     public override bool Equals(object? obj) // jaro
     {
         return Equals(obj as TaskItem);
+    }
+
+    public int CompareTo(TaskItem? other)
+    {
+        if (other == null) return 1;
+        return string.Compare(ID, other.ID, StringComparison.OrdinalIgnoreCase);
     }
 
     public bool Equals(TaskItem? other) // jaro

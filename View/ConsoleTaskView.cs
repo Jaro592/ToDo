@@ -18,7 +18,8 @@ public class ConsoleTaskView : ITaskView
     private void DisplayTasks(IMyCollection<TaskItem> tasks) //akif
     {
         Console.Clear();
-        Console.WriteLine("=== ToDo List ===\n");
+        Console.WriteLine("Controls: ↑ (up), ↓ (down), esc (exit), enter (pick)");
+        Console.WriteLine("\n=== ToDo List ===\n");
 
         tasks.Sort((a, b) => a.ID.CompareTo(b.ID));
         Console.WriteLine("---In progress---");
@@ -305,7 +306,12 @@ public class ConsoleTaskView : ITaskView
 
 
                     break;
+
                 case 8:
+
+                    _userService.SaveAll();
+                    _service.SaveAll();
+                    _taskUserService.SaveAll();
                     return;
             }
         }

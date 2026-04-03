@@ -2,14 +2,15 @@ class TaskSerivce : Serialize,ITaskService
 {
     private readonly ITaskRepository _repository;
     private readonly IMyCollection<TaskItem> _tasks;
+
+    private readonly ITaskUserService _taskUserService;
     private MyLinkedList<User> _users;
 
-    public TaskSerivce(ITaskRepository repository)
+    public TaskSerivce(ITaskRepository repository, ITaskUserService taskUserService)
     {
         _repository = repository;
+        _taskUserService = taskUserService;
         _tasks = _repository.LoadTasks();
-        // _users = new MyLinkedList<User>();
-
     }
     public IMyCollection<TaskItem> GetAllTasks() => _tasks;
 
@@ -19,7 +20,7 @@ class TaskSerivce : Serialize,ITaskService
         string newId = NewSerializeString(); // jaro
         var newTask = new TaskItem { ID = newId, Description = description, Completed = false };
         _tasks.Add(newTask);
-        _repository.SaveTasks(_tasks);
+        //_repository.SaveTasks(_tasks);
     }
     public void RemoveTask(string id)
     {
@@ -27,8 +28,10 @@ class TaskSerivce : Serialize,ITaskService
 
         if (task != null)
         {
+            _taskUserService.RemoveAllRelationsForTask(id);  //jaro
             _tasks.Remove(task);
-            _repository.SaveTasks(_tasks);
+
+            //_repository.SaveTasks(_tasks);
         }
     }
 
@@ -39,12 +42,17 @@ class TaskSerivce : Serialize,ITaskService
         if (task != null)
         {
             task.Completed = !task.Completed;
-            _repository.SaveTasks(_tasks);
+            //_repository.SaveTasks(_tasks);
         }
     }
     // private Guid GenerateGUID() //jaro
     // {
     //     return Guid.NewGuid();
     // }
+
+    public void SaveAll() // jaro
+    {
+        _repository.SaveTasks(_tasks);
+    }
 
 }

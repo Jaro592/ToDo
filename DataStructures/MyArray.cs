@@ -7,6 +7,7 @@ public sealed class MyArray<T> : IMyCollection<T>, IMyIterator<T> where T : IEqu
     private int _index;
     private int _iteratorIndex = -1;
     private bool _isDirty = false;
+    private bool _isSorted = true; //akif
 
     public int LastIndex => _index;
 
@@ -23,25 +24,10 @@ public sealed class MyArray<T> : IMyCollection<T>, IMyIterator<T> where T : IEqu
         _index = lastIndex;
     }
 
-    public T this[int index]
-    {
-        get 
-        {
-            if (index < 0 || index > _index) throw new IndexOutOfRangeException();
-            return _data[index];
-        }
-        set 
-        {
-            if (index < 0 || index > _index) throw new IndexOutOfRangeException();
-            _data[index] = value;
-            _isDirty = true;
-        }
-    }
-
     public int Count {get => _index + 1;}
-    public bool Dirty {get => _isDirty == false;}
+    public bool Dirty {get => _isDirty;}
 
-    private T[] Resize(T[] arr)
+    private T[] Resize() // jaro
     {
         T[] newData = new T[_data.Length * 2];
         for (int i = 0; i <= _index; i++) newData[i] = _data[i];
@@ -49,20 +35,55 @@ public sealed class MyArray<T> : IMyCollection<T>, IMyIterator<T> where T : IEqu
         return _data;
     }
 
-    public void Add(T item)
+    public void Add(T item) // jaro
     {
         if(item == null) return;
         if (_index + 1 >= _data.Length)
         {
-            Resize(_data);
+            Resize();
         }
         
         _index++;
         _data[_index] = item;
         _isDirty = true;
+        _isSorted = false; //akif
     }
 
-    public void Remove(T item)
+    public void AddSorted(T item, IComparer<T>? comparer = null) //akif
+    {
+        if (item == null) return;
+
+        comparer ??= Comparer<T>.Default;
+
+        if (_index + 1 >= _data.Length)
+            Resize();
+
+        int insertIndex = 0;
+
+        int left = 0;
+        int right = _index;
+
+        while (left <= right)
+        {
+            int mid = left + (right - left) / 2;
+            if (comparer.Compare(_data[mid], item) < 0)
+                left = mid + 1;
+            else
+                right = mid - 1;
+        }
+
+        insertIndex = left;
+
+        Shift(insertIndex, true);
+
+        _data[insertIndex] = item;
+
+        _index++;
+        _isDirty = true;
+        _isSorted = true;
+    }
+
+    public void Remove(T item) // jaro
     {
         if(item == null) return;
         int foundIndex = Find(item);
@@ -99,7 +120,7 @@ public sealed class MyArray<T> : IMyCollection<T>, IMyIterator<T> where T : IEqu
         return default;
     }
 
-    public IMyCollection<T> Filter(Func<T, bool> predicate)
+    public IMyCollection<T> Filter(Func<T, bool> predicate) // jaro
     {
         var result = new MyArray<T>(_data.Length);
         for (int i = 0; i <= _index; i++)
@@ -112,7 +133,7 @@ public sealed class MyArray<T> : IMyCollection<T>, IMyIterator<T> where T : IEqu
         return result;
     }
 
-    public void Sort( Comparison<T> comparison)
+    public void Sort( Comparison<T> comparison) // Jaro, bubble sort for simplicity, can be optimized with other algorithms
     {
         for (int i = 0; i <= _index; i++)
         {
@@ -125,9 +146,10 @@ public sealed class MyArray<T> : IMyCollection<T>, IMyIterator<T> where T : IEqu
             }
         }
         _isDirty = true;
+        _isSorted = true; //akif
     }
 
-    public R Reduce<R>(R initial, Func<R, T, R> accumulator)
+    public R Reduce<R>(R initial, Func<R, T, R> accumulator) // Jaro
     {
         R result = initial;
         for (int i = 0; i <= _index; i++)
@@ -160,14 +182,49 @@ public sealed class MyArray<T> : IMyCollection<T>, IMyIterator<T> where T : IEqu
         return this;
     }
 
-    public int Find(T Item, int startIndex = 0)
+    private int Find(T Item, int startIndex = 0) // Jaro helper
     {
         if (startIndex < 0 || startIndex > _index) return -1;
+        if (_isSorted) return BSFind(Item); // akif
         for (int i = startIndex; i <= _index; i++)
         {
             if (_data[i] != null && _data[i].Equals(Item)) return i;
         }
         return -1;
+    }
+
+
+    private int BSFind(T item, IComparer<T>? comparer = null) //akif
+    {
+        comparer ??= Comparer<T>.Default;
+
+        int left = 0;
+        int right = _index;
+
+        while (left <= right)
+        {
+            int mid = left + (right - left) / 2;
+            int cmp = comparer.Compare(_data[mid], item);
+
+            if (cmp == 0) return mid;
+            else if (cmp < 0) left = mid + 1;
+            else right = mid - 1;
+        }
+
+        return -1;
+    }
+
+    public bool IsSorted(IComparer<T>? comparer = null) // akif
+    {
+        comparer ??= Comparer<T>.Default;
+
+        for (int i = 1; i <= _index; i++)
+        {
+            if (comparer.Compare(_data[i - 1], _data[i]) > 0)
+                return false;
+        }
+
+        return true;
     }
 
     public void Swap(int i, int j)
@@ -178,7 +235,7 @@ public sealed class MyArray<T> : IMyCollection<T>, IMyIterator<T> where T : IEqu
         _data[j] = temp;
     }
 
-    public void Shift(int i, bool right = true)
+    public void Shift(int i, bool right = true) // Jaro 
     {
         if (right)
         {
