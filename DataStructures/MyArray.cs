@@ -26,7 +26,7 @@ public sealed class MyArray<T> : IMyCollection<T>, IMyIterator<T> where T : IEqu
     public int Count {get => _index + 1;}
     public bool Dirty {get => _isDirty;}
 
-    private T[] Resize(T[] arr) // jaro
+    private T[] Resize() // jaro
     {
         T[] newData = new T[_data.Length * 2];
         for (int i = 0; i <= _index; i++) newData[i] = _data[i];
@@ -39,7 +39,7 @@ public sealed class MyArray<T> : IMyCollection<T>, IMyIterator<T> where T : IEqu
         if(item == null) return;
         if (_index + 1 >= _data.Length)
         {
-            Resize(_data);
+            Resize();
         }
         
         _index++;
