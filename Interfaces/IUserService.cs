@@ -5,4 +5,5 @@ public interface IUserService
     bool DeleteUser(string name); //akif
 
     IMyCollection<User> GetAllUsers();
+    IMyCollection<User> GetUsersByIds(IMyCollection<string> userIds);
 }

@@ -250,7 +250,9 @@ public class ConsoleTaskView : ITaskView
                     int taskIdx = NavigateMenu(tasksView, 0);
                     TaskItem selectedTaskView = GetAtIndex(tasksView, taskIdx);
                     Console.Clear();
-                    var usersForTask = _taskUserService.GetUsersForTask(selectedTaskView.ID);
+                    // var usersForTask = _taskUserService.GetUsersForTask(selectedTaskView.ID);
+                    var userIds = _taskUserService.GetUsersForTask(selectedTaskView.ID);
+                    var usersForTask = _userService.GetUsersByIds(userIds);
                     if (usersForTask.Count == 0)
                     {
                         Console.ForegroundColor = ConsoleColor.Red;

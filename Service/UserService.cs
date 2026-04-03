@@ -43,6 +43,20 @@ public class UserService : Serialize, IUserService
         _userRepository.SaveUsers(users);
         return true;
     }
+    public IMyCollection<User> GetUsersByIds(IMyCollection<string> userIds) //Basel
+    {
+        IMyCollection<User> users = new MyLinkedList<User>();
+
+        return userIds.Reduce(users, (list, id) =>
+        {
+            var user = _userRepository.GetById(id);
+            if (user != null)
+            {
+                list.Add(user);
+            }
+            return list;
+        });
+    }
     // private Guid GenerateGUID() // jaro
     // {
     //     return Guid.NewGuid();

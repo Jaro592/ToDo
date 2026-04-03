@@ -2,12 +2,12 @@ public class TaskUserService : ITaskUserService // Basel
 {
     private ITaskUserRepository _taskUserRepository;
     private readonly ITaskRepository _taskRepository;
-    private IUserRepository _userRepository;
-    public TaskUserService(ITaskUserRepository taskUserRepository, ITaskRepository taskRepository, IUserRepository userRepository)
+    // private IUserRepository _userRepository;
+    public TaskUserService(ITaskUserRepository taskUserRepository, ITaskRepository taskRepository)
     {
         _taskUserRepository = taskUserRepository;
         _taskRepository = taskRepository;
-        _userRepository = userRepository;
+        // _userRepository = userRepository;
     }
 
     public void Assign(string taskId, string userId) // Basel x changes by jaro
@@ -41,22 +41,30 @@ public class TaskUserService : ITaskUserService // Basel
         });
     }
 
-    public IMyCollection<User> GetUsersForTask(string taskId)//Basel
+
+
+
+    public IMyCollection<string> GetUsersForTask(string taskId) // Basel
     {
-        var usersIds = _taskUserRepository.GetUsersForTask(taskId);
-        IMyCollection<User> usersForTask = new MyLinkedList<User>(); ;
-
-        var iterator = usersIds.GetIterator();
-        return usersIds.Reduce(usersForTask, (currentList, userId) =>
-        {
-            User user = _userRepository.GetById(userId);
-
-            if (user != null)
-            {
-                currentList.Add(user);
-            }
-            return currentList;
-        });
-
+        return _taskUserRepository.GetUsersForTask(taskId);
     }
+
+    // public IMyCollection<User> GetUsersForTask(string taskId)//Basel
+    // {
+    //     var usersIds = _taskUserRepository.GetUsersForTask(taskId);
+    //     IMyCollection<User> usersForTask = new MyLinkedList<User>(); ;
+
+    //     var iterator = usersIds.GetIterator();
+    //     return usersIds.Reduce(usersForTask, (currentList, userId) =>
+    //     {
+    //         User user = _userRepository.GetById(userId);
+
+    //         if (user != null)
+    //         {
+    //             currentList.Add(user);
+    //         }
+    //         return currentList;
+    //     });
+
+    // }
 }

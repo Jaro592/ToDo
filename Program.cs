@@ -15,7 +15,7 @@
         ITaskService taskService = new TaskSerivce(taskrepository);
         IUserService userService = new UserService(userrepository);
 
-        ITaskUserService taskUserService = new TaskUserService(taskUserRepository, taskrepository, userrepository);
+        ITaskUserService taskUserService = new TaskUserService(taskUserRepository, taskrepository);
 
         ITaskView view = new ConsoleTaskView(taskService, userService, taskUserService);
         //IMyCollection<TaskItem> tasks = new MyCollection<TaskItem>(repository.LoadTasks());

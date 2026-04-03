@@ -6,5 +6,5 @@ public interface ITaskUserService
 
     // IMyCollection<TaskItem> GetTasksForUser(int userId);
 
-    IMyCollection<User> GetUsersForTask(string taskId);
+    IMyCollection<string> GetUsersForTask(string taskId);
 }
