@@ -43,9 +43,8 @@ public class JsonTaskUserRepository : ITaskUserRepository
         string json = JsonSerializer.Serialize(cleanArray, new JsonSerializerOptions { WriteIndented = true });
         File.WriteAllText(_filePath, json);
     }
-    public IMyCollection<string> GetTasksForUser(string userId) // Jaro
+    public IMyCollection<string> GetTasksForUser(IMyCollection<TaskUser> allRelations, string userId) // Jaro 
     {
-        var allRelations = Load(); 
         IMyCollection<string> startLijst = new MyLinkedList<string>();
         return allRelations.Reduce(startLijst, (huidigeLijst, relation) => 
         {

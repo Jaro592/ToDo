@@ -7,6 +7,10 @@ public interface ITaskService
     void RemoveTask(string id);
     void ToggleTaskCompletion(string id);
 
+    void SaveAll(); // jaro
+
+    
+
     // void AddUser(string name);
     // User FindUser(string name);
     // void AssignTaskToUser(int taskId, string userName);
