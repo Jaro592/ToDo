@@ -23,21 +23,6 @@ public sealed class MyArray<T> : IMyCollection<T>, IMyIterator<T> where T : IEqu
         _index = lastIndex;
     }
 
-    public T this[int index]
-    {
-        get 
-        {
-            if (index < 0 || index > _index) throw new IndexOutOfRangeException();
-            return _data[index];
-        }
-        set 
-        {
-            if (index < 0 || index > _index) throw new IndexOutOfRangeException();
-            _data[index] = value;
-            _isDirty = true;
-        }
-    }
-
     public int Count {get => _index + 1;}
     public bool Dirty {get => _isDirty;}
 
