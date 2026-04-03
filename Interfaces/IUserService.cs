@@ -8,4 +8,5 @@ public interface IUserService
 
 
     IMyCollection<User> GetAllUsers();
+    IMyCollection<User> GetUsersByIds(IMyCollection<string> userIds);
 }

@@ -11,7 +11,7 @@ public sealed class MyLinkedList<T> : IMyCollection<T>, IMyIterator<T> where T :
 
     // private Node<T> _node;
 
-    public void Add(T item) // could add a last node to remove the while loop here
+    public void Add(T item) //Basel
     {
         Node<T> nNode = new Node<T>(item);
 
@@ -34,14 +34,15 @@ public sealed class MyLinkedList<T> : IMyCollection<T>, IMyIterator<T> where T :
         _dirty = true;
 
     }
-    public void AddFirst(T value)
+
+    public void AddFirst(T value) // Basel
     {
         First = new Node<T>(value, First);
         _count++;
         _dirty = true;
     }
 
-    public void Remove(T item)
+    public void Remove(T item) // Basel
     {
         if (First is null) return;
 
@@ -101,13 +102,13 @@ public sealed class MyLinkedList<T> : IMyCollection<T>, IMyIterator<T> where T :
         return result;
     }
 
-    void Swap(Node<T> a, Node<T> b)
+    void Swap(Node<T> a, Node<T> b) // Basel
     {
         T temp = a.Data;
         a.Data = b.Data;
         b.Data = temp;
     }
-    public void Sort(Comparison<T> comparison)
+    public void Sort(Comparison<T> comparison) // Basel
     {
         if (First is null) return;
 

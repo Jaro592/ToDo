@@ -1,4 +1,4 @@
-public class TaskUser : IEquatable<TaskUser>
+public class TaskUser : IEquatable<TaskUser>// Basel
 {
     public string TaskID { get; set; }
     public string UserID { get; set; }

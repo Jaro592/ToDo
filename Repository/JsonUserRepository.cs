@@ -36,6 +36,22 @@ public class JsonUserRepository : IUserRepository
         string json = JsonSerializer.Serialize(cleanArray, new JsonSerializerOptions { WriteIndented = true });
         File.WriteAllText(_filePath, json);
     }
+    public User GetById(string userId) // Basel
+    {
+        var allUsers = this.LoadUsers();
+        var iterator = allUsers.GetIterator();
 
+        while (iterator.HasNext())
+        {
+            var currentUser = iterator.Next();
+
+            if (currentUser.UserID == userId)
+            {
+                return currentUser;
+            }
+        }
+
+        return null;
+    }
 
 }

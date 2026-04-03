@@ -1,4 +1,4 @@
-public class TaskUserService : ITaskUserService
+public class TaskUserService : ITaskUserService // Basel
 {
     private ITaskUserRepository _taskUserRepository;
     private readonly ITaskRepository _taskRepository;
@@ -28,7 +28,7 @@ public class TaskUserService : ITaskUserService
     {
         // We maken een lijstje van alle relaties die we moeten verwijderen
         IMyCollection<TaskUser> toRemove = new MyLinkedList<TaskUser>();
-        
+
         var iterator = _userTasks.GetIterator();
         while (iterator.HasNext())
         {
@@ -51,22 +51,34 @@ public class TaskUserService : ITaskUserService
     {
         var taskIds = _taskUserRepository.GetTasksForUser(_userTasks, userId);
         IMyCollection<TaskItem> tasksForUser = new MyLinkedList<TaskItem>();
-        
+
         var iterator = taskIds.GetIterator();
-        return taskIds.Reduce(tasksForUser, (huidigeLijst, taskId) => 
+        return taskIds.Reduce(tasksForUser, (huidigeLijst, taskId) =>
         {
             TaskItem realTask = _taskRepository.GetById(taskId);
-            
+
             if (realTask != null)
             {
                 huidigeLijst.Add(realTask);
             }
-            return huidigeLijst; 
+            return huidigeLijst;
         });
     }
+
+
+
+
+
+    public IMyCollection<string> GetUsersForTask(string taskId) // Basel
+    {
+        return _taskUserRepository.GetUsersForTask(taskId);
+    }
+
+
 
     public void SaveAll() // jaro
     {
         _taskUserRepository.Save(_userTasks);
     }
+
 }

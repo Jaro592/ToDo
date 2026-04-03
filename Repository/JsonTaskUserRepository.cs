@@ -8,7 +8,7 @@ public class JsonTaskUserRepository : ITaskUserRepository
         _filePath = filePath;
     }
 
-    public IMyCollection<TaskUser> Load()
+    public IMyCollection<TaskUser> Load() // Basel
     {
         if (!File.Exists(_filePath)) return new MyLinkedList<TaskUser>();
 
@@ -27,7 +27,7 @@ public class JsonTaskUserRepository : ITaskUserRepository
         return relations;
     }
 
-    public void Save(IMyCollection<TaskUser> relations)
+    public void Save(IMyCollection<TaskUser> relations) //Basel
     {
         TaskUser[] cleanArray = new TaskUser[relations.Count];
 
@@ -46,7 +46,7 @@ public class JsonTaskUserRepository : ITaskUserRepository
     public IMyCollection<string> GetTasksForUser(IMyCollection<TaskUser> allRelations, string userId) // Jaro 
     {
         IMyCollection<string> startLijst = new MyLinkedList<string>();
-        return allRelations.Reduce(startLijst, (huidigeLijst, relation) => 
+        return allRelations.Reduce(startLijst, (huidigeLijst, relation) =>
         {
             if (relation.UserID == userId)
             {
@@ -55,4 +55,17 @@ public class JsonTaskUserRepository : ITaskUserRepository
             return huidigeLijst;
         });
     }
+    public IMyCollection<string> GetUsersForTask(string taskID)// Basel
+    {
+        var Relations = Load();
+        IMyCollection<string> start = new MyLinkedList<string>();
+
+        return Relations.Reduce(start, (currentList, relation) =>
+        {
+            if (relation.TaskID == taskID)
+                currentList.Add(relation.UserID);
+            return currentList;
+        });
+    }
+
 }
