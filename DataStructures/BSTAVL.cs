@@ -4,7 +4,7 @@ public class BSTAVL<T> : IMyCollection<T>, IMyIterator<T> where T : IComparable<
         private int _count;
         private Node<T> current;
         public int Count { get => _count; }
-        public bool Dirty { get => false; }
+        public bool Dirty { get; set; }
 
         public BSTAVL()
         {
@@ -16,7 +16,7 @@ public class BSTAVL<T> : IMyCollection<T>, IMyIterator<T> where T : IComparable<
         {
             _tree.Root = _tree.Insert(_tree.Root, item);
             _count++;
-            IsDirty = true;
+            Dirty = true;
         }
         public void Remove(T item)
         {

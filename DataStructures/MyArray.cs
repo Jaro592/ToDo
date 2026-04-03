@@ -39,9 +39,9 @@ public sealed class MyArray<T> : IMyCollection<T>, IMyIterator<T> where T : IEqu
     }
 
     public int Count {get => _index + 1;}
-    public bool Dirty {get => _isDirty == false;}
+    public bool Dirty {get => _isDirty;}
 
-    private T[] Resize(T[] arr)
+    private T[] Resize(T[] arr) // jaro
     {
         T[] newData = new T[_data.Length * 2];
         for (int i = 0; i <= _index; i++) newData[i] = _data[i];
@@ -49,7 +49,7 @@ public sealed class MyArray<T> : IMyCollection<T>, IMyIterator<T> where T : IEqu
         return _data;
     }
 
-    public void Add(T item)
+    public void Add(T item) // jaro
     {
         if(item == null) return;
         if (_index + 1 >= _data.Length)
@@ -62,7 +62,7 @@ public sealed class MyArray<T> : IMyCollection<T>, IMyIterator<T> where T : IEqu
         _isDirty = true;
     }
 
-    public void Remove(T item)
+    public void Remove(T item) // jaro
     {
         if(item == null) return;
         int foundIndex = Find(item);
@@ -99,7 +99,7 @@ public sealed class MyArray<T> : IMyCollection<T>, IMyIterator<T> where T : IEqu
         return default;
     }
 
-    public IMyCollection<T> Filter(Func<T, bool> predicate)
+    public IMyCollection<T> Filter(Func<T, bool> predicate) // jaro
     {
         var result = new MyArray<T>(_data.Length);
         for (int i = 0; i <= _index; i++)
@@ -112,7 +112,7 @@ public sealed class MyArray<T> : IMyCollection<T>, IMyIterator<T> where T : IEqu
         return result;
     }
 
-    public void Sort( Comparison<T> comparison)
+    public void Sort( Comparison<T> comparison) // Jaro, bubble sort for simplicity, can be optimized with other algorithms
     {
         for (int i = 0; i <= _index; i++)
         {
@@ -127,7 +127,7 @@ public sealed class MyArray<T> : IMyCollection<T>, IMyIterator<T> where T : IEqu
         _isDirty = true;
     }
 
-    public R Reduce<R>(R initial, Func<R, T, R> accumulator)
+    public R Reduce<R>(R initial, Func<R, T, R> accumulator) // Jaro
     {
         R result = initial;
         for (int i = 0; i <= _index; i++)
@@ -160,7 +160,7 @@ public sealed class MyArray<T> : IMyCollection<T>, IMyIterator<T> where T : IEqu
         return this;
     }
 
-    public int Find(T Item, int startIndex = 0)
+    private int Find(T Item, int startIndex = 0) // Jaro helper
     {
         if (startIndex < 0 || startIndex > _index) return -1;
         for (int i = startIndex; i <= _index; i++)
@@ -170,7 +170,7 @@ public sealed class MyArray<T> : IMyCollection<T>, IMyIterator<T> where T : IEqu
         return -1;
     }
 
-    public void Swap(int i, int j)
+    private void Swap(int i, int j) // Jaro helper
     {
         if (i < 0 || i > _index || j < 0 || j > _index) return;
         T temp = _data[i];
@@ -178,7 +178,7 @@ public sealed class MyArray<T> : IMyCollection<T>, IMyIterator<T> where T : IEqu
         _data[j] = temp;
     }
 
-    public void Shift(int i, bool right = true)
+    public void Shift(int i, bool right = true) // Jaro 
     {
         if (right)
         {
