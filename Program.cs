@@ -2,9 +2,13 @@
 {
     static void Main(string[] args)
     {
+        Bstview();
+        //StartApp();
+    }
 
-
-        string taskFilePath = "tasks.json";
+    private static void StartApp()
+    {
+                string taskFilePath = "tasks.json";
         string userFilePath = "user.json";
         string taskUserFilePath = "task_users.json";
 
@@ -21,5 +25,12 @@
 
 
         view.Run();
+    }
+
+    public static void Bstview()
+    {
+        IMyCollection<TaskItem> bst = new BSTAVL<TaskItem>();
+        BstView view = new BstView(bst);
+        view.Display();
     }
 }
