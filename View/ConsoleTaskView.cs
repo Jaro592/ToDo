@@ -57,6 +57,7 @@ public class ConsoleTaskView : ITaskView
         menu.Add("View tasks for user"); // 5
         menu.Add("View users for task"); // 6
         menu.Add("Remove user"); //7
+        menu.Add("Save"); // 8
         menu.Add("Exit"); // 8
 
         while (true)
@@ -312,7 +313,10 @@ public class ConsoleTaskView : ITaskView
                     _userService.SaveAll();
                     _service.SaveAll();
                     _taskUserService.SaveAll();
+                    break;
+                case 9:
                     return;
+
             }
         }
     }
