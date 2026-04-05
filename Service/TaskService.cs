@@ -1,4 +1,4 @@
-class TaskSerivce : Serialize,ITaskService
+class TaskSerivce : Serialize, ITaskService
 {
     private readonly ITaskRepository _repository;
     private readonly IMyCollection<TaskItem> _tasks;
@@ -20,7 +20,6 @@ class TaskSerivce : Serialize,ITaskService
         string newId = NewSerializeString(); // jaro
         var newTask = new TaskItem { ID = newId, Description = description, Completed = false };
         _tasks.Add(newTask);
-        //_repository.SaveTasks(_tasks);
     }
     public void RemoveTask(string id)
     {
@@ -31,7 +30,6 @@ class TaskSerivce : Serialize,ITaskService
             _taskUserService.RemoveAllRelationsForTask(id);  //jaro
             _tasks.Remove(task);
 
-            //_repository.SaveTasks(_tasks);
         }
     }
 
@@ -45,10 +43,6 @@ class TaskSerivce : Serialize,ITaskService
             //_repository.SaveTasks(_tasks);
         }
     }
-    // private Guid GenerateGUID() //jaro
-    // {
-    //     return Guid.NewGuid();
-    // }
 
     public void SaveAll() // jaro
     {

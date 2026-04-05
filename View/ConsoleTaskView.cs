@@ -130,79 +130,60 @@ public class ConsoleTaskView : ITaskView
                     _userService.AddUser(name);
                     break;
 
-                case 4:
+                case 4: // Basel
 
                     var tasksAssign = _service.GetAllTasks();
                     if (tasksAssign.Count == 0)
                     {
-                        Console.WriteLine("\nThere are no tasks");
+                        Console.Clear();
+                        Console.WriteLine("There are no tasks");
                         Console.ReadKey();
                         break;
                     }
 
                     int idx = NavigateMenu(tasksAssign, 0);
-                    // TaskItem task = tasksAssign[idx];
                     if (idx == -1)
                     {
-                        System.Console.WriteLine("\nNo task selected, press enter to continue");
+                        Console.Clear();
+                        Console.WriteLine("No task selected");
                         Console.ReadKey();
                         break;
                     }
 
-                    var taskIterator = tasksAssign.GetIterator();
-                    int j = 0;
-                    TaskItem selectedTaskAssign = null!;
-                    while (taskIterator.HasNext())
-                    {
-                        var task = taskIterator.Next();
-                        if (j == idx)
-                        {
-                            selectedTaskAssign = task;
-                            break;
-                        }
-                        j++;
-                    }
+                    TaskItem selectedTaskAssign = GetAtIndex(tasksAssign, idx);
 
                     var users = _userService.GetAllUsers();
                     if (users.Count == 0)
                     {
-                        Console.WriteLine("\nThere are no users");
                         Console.Clear();
+                        Console.WriteLine("There are no users");
+                        Console.ReadKey();
                         break;
                     }
 
                     int userIdx = NavigateMenu(users, 0);
-
                     if (userIdx == -1)
                     {
-                        System.Console.WriteLine("\nNo user selected, press enter to continue");
+                        Console.Clear();
+                        Console.WriteLine("No user selected");
                         Console.ReadKey();
                         break;
                     }
 
-                    var iterator = users.GetIterator();
-                    int i = 0;
-                    User selectedUser = null!;
-                    while (iterator.HasNext())
+                    User selectedUser = GetAtIndex(users, userIdx);
+
+                    var assigned = _taskUserService.Assign(selectedTaskAssign.ID, selectedUser.UserID);
+
+                    if (!assigned)
                     {
-                        var u = iterator.Next();
-                        if (i == userIdx)
-                        {
-                            selectedUser = u;
-                            break;
-                        }
-                        i++;
-                    }
-                    if (selectedTaskAssign == null || selectedUser == null)
-                    {
-                        Console.WriteLine("\nSomething went wrong");
+                        Console.Clear();
+                        Console.WriteLine("User already assigned to this task");
                         Console.ReadKey();
                         break;
                     }
-
-
-                    _taskUserService.Assign(selectedTaskAssign.ID, selectedUser.UserID);
-
+                    Console.Clear();
+                    Console.WriteLine("User assigned successfully");
+                    Console.ReadKey();
                     break;
                 case 5:
                     var usersView = _userService.GetAllUsers(); // Jaro
@@ -252,8 +233,8 @@ public class ConsoleTaskView : ITaskView
                     int taskIdx = NavigateMenu(tasksView, 0);
                     TaskItem selectedTaskView = GetAtIndex(tasksView, taskIdx);
                     Console.Clear();
-                    // var usersForTask = _taskUserService.GetUsersForTask(selectedTaskView.ID);
-                    var userIds = _taskUserService.GetUsersForTask(selectedTaskView.ID);
+
+                    var userIds = _taskUserService.GetUsersForTask(selectedTaskView.ID); //  selectedTaskView.ID = taskid 
                     var usersForTask = _userService.GetUsersByIds(userIds);
                     if (usersForTask.Count == 0)
                     {
@@ -266,16 +247,16 @@ public class ConsoleTaskView : ITaskView
                         Console.ForegroundColor = ConsoleColor.Green;
                         Console.Write($"Users for this task: ");
                         Console.ForegroundColor = ConsoleColor.Cyan;
-                        // Console.WriteLine($"{selectedTaskView.Description}");
-                        // Console.ResetColor();
+
 
                         var iteratorUsers = usersForTask.GetIterator();
 
                         while (iteratorUsers.HasNext())
                         {
                             var user = iteratorUsers.Next();
-                            Console.WriteLine(user.Name);
+                            Console.Write(user.Name);
                         }
+                        Console.WriteLine();
                         Console.ResetColor();
                     }
 

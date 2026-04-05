@@ -12,16 +12,27 @@ public class TaskUserService : ITaskUserService // Basel
         _userTasks = _taskUserRepository.Load();
     }
 
-    public void Assign(string taskId, string userId) // Basel x changes by jaro
+    public bool Assign(string taskId, string userId) // Basel x changes by jaro
     {
-        var relation = new TaskUser
+        var iterator = _userTasks.GetIterator();
+        while (iterator.HasNext())
+        {
+            var existing = iterator.Next();
+
+            if (existing.UserID == userId && existing.TaskID == taskId)
+            {
+                return false;
+            }
+
+        }
+
+
+        _userTasks.Add(new TaskUser
         {
             TaskID = taskId,
             UserID = userId
-        };
-
-        //_taskUserRepository.Save(userTask); jaro
-        _userTasks.Add(relation);
+        });
+        return true;
     }
 
     public void RemoveAllRelationsForTask(string taskId) // Jaro
@@ -71,9 +82,8 @@ public class TaskUserService : ITaskUserService // Basel
 
     public IMyCollection<string> GetUsersForTask(string taskId) // Basel
     {
-        return _taskUserRepository.GetUsersForTask(taskId);
+        return _taskUserRepository.GetUsersForTask(_userTasks, taskId);
     }
-
 
 
     public void SaveAll() // jaro
