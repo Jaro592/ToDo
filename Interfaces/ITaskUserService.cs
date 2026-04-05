@@ -1,6 +1,6 @@
 public interface ITaskUserService
 {
-    void Assign(string taskId, string userId); // Basel
+    bool Assign(string taskId, string userId); // Basel
     IMyCollection<TaskItem> GetTasksForUser(string userId);
 
     void SaveAll(); // jaro

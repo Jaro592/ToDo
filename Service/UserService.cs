@@ -14,19 +14,15 @@ public class UserService : Serialize, IUserService
 
     public void AddUser(string name)
     {
-        //var users = _userRepository.LoadUsers();
         string newId = NewSerializeString();
         var user = new User(name);
         user.UserID = newId;
-        //users.Add(user);
         _users.Add(user);
-        //_userRepository.SaveUsers(users);
     }
 
     public User? FindUser(string name)
     {
-        // var users = GetAllUsers(); // changed from var users = _userRepository.LoadUsers(); to use the already existing function (GetAllUsers) that does the same -akif
-        // return users.FindBy(name, (k, key) => k.Name.CompareTo(key));
+
         return _users.FindBy(name, (k, key) => k.Name.CompareTo(key)); // jaro use my own storage instead of loading from json every time
 
     }
@@ -47,9 +43,7 @@ public class UserService : Serialize, IUserService
         _users.Remove(user);
         return true;
 
-        //var users = GetAllUsers(); not needed anymore Jaro
-        //users.Remove(user);
-        //_userRepository.SaveUsers(users);
+
     }
     public IMyCollection<User> GetUsersByIds(IMyCollection<string> userIds) //Basel
     {
@@ -65,10 +59,6 @@ public class UserService : Serialize, IUserService
             return list;
         });
     }
-    // private Guid GenerateGUID() // jaro
-    // {
-    //     return Guid.NewGuid();
-    // }
 
     public void SaveAll() // jaro
     {

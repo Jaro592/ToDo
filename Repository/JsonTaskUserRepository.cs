@@ -55,12 +55,12 @@ public class JsonTaskUserRepository : ITaskUserRepository
             return huidigeLijst;
         });
     }
-    public IMyCollection<string> GetUsersForTask(string taskID)// Basel
+    public IMyCollection<string> GetUsersForTask(IMyCollection<TaskUser> relations, string taskID)// Basel
     {
-        var Relations = Load();
+        // var Relations = Load();
         IMyCollection<string> start = new MyLinkedList<string>();
 
-        return Relations.Reduce(start, (currentList, relation) =>
+        return relations.Reduce(start, (currentList, relation) =>
         {
             if (relation.TaskID == taskID)
                 currentList.Add(relation.UserID);
