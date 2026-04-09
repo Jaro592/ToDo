@@ -296,6 +296,9 @@ public class ConsoleTaskView : ITaskView
                     _taskUserService.SaveAll();
                     break;
                 case 9:
+                    _userService.SaveAll();
+                    _service.SaveAll();
+                    _taskUserService.SaveAll();
                     return;
 
             }
