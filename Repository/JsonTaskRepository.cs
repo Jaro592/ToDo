@@ -40,7 +40,7 @@ class JsonTaskRepository : ITaskRepository
 
     public TaskItem GetById(string taskId) // Jaro
     {
-        var allTasks = this.LoadTasks();
+        var allTasks = LoadTasks();
         var iterator = allTasks.GetIterator();
         while (iterator.HasNext())
         {
