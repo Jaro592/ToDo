@@ -1,186 +1,219 @@
-public class BSTAVL<T> : IMyCollection<T>, IMyIterator<T> where T : IComparable<T>// jaro
+public class BSTAVL<T> : IMyCollection<T>, IMyIterator<T> where T : IComparable<T>
 {
-    private AVLTree<T> _tree;
-        private int _count;
-        private Node<T> current;
-        public int Count { get => _count; }
-        public bool Dirty { get; set; }
 
-        public BSTAVL()
-        {
-            _tree = new AVLTree<T>();
-            _count = 0;
-            current = null;
-        }
-        public void Add(T item) // Jaro
-        {
-            _tree.Root = _tree.Insert(_tree.Root, item);
-            _count++;
-            Dirty = true;
-        }
-        public void Remove(T item)
-        {
-        }
-        public T? FindBy<K>(K key, Func<T,K,int> Comparer) // O(log n) Jaro
-        {
-            Node<T>? current = _tree.Root;
-            while (current != null)
-            {
-                int comparison = Comparer(current.Value, key);
-                if (comparison == 0)
-                {
-                    return current.Value;
-                }
-                else if (comparison > 0)
-                {
-                    current = current.Left;
-                }
-                else
-                {
-                    current = current.Right;
-                }
-            }
-            return default;
-        }
-        public IMyCollection<T> Filter(Func<T, bool> predicate)
-        {
-            return null;
-        }
-        public void Sort(Comparison<T> comparison)
-        {
-        }
-        public R Reduce<R>(R initial, Func<R,T,R> accumulator)
-        {
-            return initial;
-        }
-        public IMyIterator<T> GetIterator() // jaro
-        {
-            return this;
-        }
-        public IMyCollection<T> GetEnumerator() // jaro
-        {
-            return this;
-        }
-        public bool HasNext() // Jaro
-        {
-            return current != null;
-        }
-        public T Next() // moet nog aan worden gewerkt, dit is een simpele inorder traversal maar we moeten ook de stack bijhouden
-        {
-            if (!HasNext()) return default!;
-            T value = current.Value;
-            current = current.Right ?? current.Left;
-            return value;
-        }
-        public void Reset() // Jaro
-        {
-            current = _tree.Root;
-        }
+    private Node _root;
+    private int _count;
+    private MyStack _stack;
+    public int Count => _count;
+    public bool Dirty { get; set; }
 
-        public void PrintTree() // Jaro
-        {
-            _tree.Display(_tree.Root);
-        }
-}
-    public class Node<T> // Jaro
+    public BSTAVL() { _stack = new MyStack(); }
+
+
+    public void Add(T item)
     {
-        public T Value;
-        public int Height;
-        public Node<T> Left;
-        public Node<T> Right;
-        public Node(T value)
+        int before = _count;
+        bool added = false;
+        _root = Insert(_root, item, ref added);
+        if (added) { _count++; Dirty = true; }
+    }
+
+    public void Remove(T item)
+    {
+        bool found = false;
+        _root = Remove(_root, item, ref found);
+        if (found) { _count--; Dirty = true; }
+    }
+
+    public T? FindBy<K>(K key, Func<T, K, int> comparer)   // O(log n) Jaro
+    {
+        Node cur = _root;
+        while (cur != null)
         {
-            Value = value;
-            Height = 1;
-            Left = null;
-            Right = null;
+            int cmp = comparer(cur.Value, key);
+            if (cmp == 0) return cur.Value;
+            cur = cmp > 0 ? cur.Left : cur.Right;
+        }
+        return default;
+    }
+
+    public IMyCollection<T> Filter(Func<T, bool> predicate) 
+    { 
+        return null; 
+    }
+    public void Sort(Comparison<T> comparison) { }
+    public R Reduce<R>(R initial, Func<R, T, R> accumulator)
+    { 
+        return initial; 
+    }
+
+    public IMyIterator<T> GetIterator() 
+    { 
+        Reset(); 
+        return this; 
+    }
+    public IMyCollection<T> GetEnumerator() 
+    { 
+        Reset(); 
+        return this; 
+    }
+
+
+    public void Reset()
+    {
+        _stack = new MyStack();
+        PushLeftSpine(_root);
+    }
+
+    public bool HasNext() => !_stack.IsEmpty;
+
+    public T Next() // Jaro
+    {
+        if (!HasNext()) return default!;
+
+        Node node = _stack.Pop();
+        T value = node.Value;
+
+        PushLeftSpine(node.Right);
+
+        return value;
+    }
+
+
+    private void PushLeftSpine(Node node) // go left in tree to find smal
+    {
+        while (node != null)
+        {
+            _stack.Push(node);
+            node = node.Left;
         }
     }
 
-    public class AVLTree<T> where T : IComparable<T> { // Jaro
-    public Node<T> Root;
-    public Node<T> Insert(Node<T> node, T value) // Jaro
+    public void PrintTree() => Display(_root); // Jaro
+
+
+    private Node Insert(Node node, T value, ref bool added) // Jaro
     {
-        if (node == null) {
-            return new Node<T>(value);
+        if (node == null) { added = true; return new Node(value); }
+
+        int cmp = value.CompareTo(node.Value);
+        if(cmp < 0) 
+        {
+            node.Left  = Insert(node.Left,  value, ref added);
         }
-        if (value.CompareTo(node.Value) < 0) {
-            node.Left = Insert(node.Left, value);
-        } else if (value.CompareTo(node.Value) > 0) {
-            node.Right = Insert(node.Right, value);
-        } else {
-            return node;  // Duplicate values not allowed
+        else if(cmp > 0)
+        { 
+            node.Right = Insert(node.Right, value, ref added);
         }
-        // Update height of the current node
-        node.Height = 1 + (GetHeight(node.Left) > GetHeight(node.Right) ? GetHeight(node.Left) : GetHeight(node.Right));
-        // Balance the tree
-        int balanceFactor = GetBalanceFactor(node);
-        // Left Heavy
-        if (balanceFactor > 1) {
-            if (value.CompareTo(node.Left.Value) < 0) {
-                return RotateRight(node);
-            } else {
-                node.Left = RotateLeft(node.Left);
-                return RotateRight(node);
-            }
+        else
+        {
+             return node; // duplicates not allowed
         }
-        // Right Heavy
-        if (balanceFactor < -1) {
-            if (value.CompareTo(node.Right.Value) > 0) {
-                return RotateLeft(node);
-            } else {
-                node.Right = RotateRight(node.Right);
-                return RotateLeft(node);
-            }
+
+        return Rebalance(node);
+    }
+    private Node Remove(Node node, T value, ref bool found) // Jaro
+    {
+        if (node == null) return null;
+
+        int cmp = value.CompareTo(node.Value);
+        if      (cmp < 0) node.Left  = Remove(node.Left,  value, ref found);
+        else if (cmp > 0) node.Right = Remove(node.Right, value, ref found);
+        else
+        {
+            found = true;
+            if (node.Left == null)  return node.Right;
+            if (node.Right == null) return node.Left;
+
+            Node successor = node.Right;
+            while (successor.Left != null) successor = successor.Left;
+            node.Value = successor.Value;
+            node.Right = Remove(node.Right, successor.Value, ref found);
+        }
+
+        return Rebalance(node);
+    }
+
+    private Node Rebalance(Node node) // Jaro
+    {
+        node.Height = 1 + Math.Max(GetHeight(node.Left), GetHeight(node.Right));
+        int bf = GetBalanceFactor(node);
+
+        if (bf > 1)
+        {
+            if (GetBalanceFactor(node.Left) >= 0)  return RotateRight(node);
+            node.Left = RotateLeft(node.Left);      return RotateRight(node);
+        }
+        if (bf < -1)
+        {
+            if (GetBalanceFactor(node.Right) <= 0) return RotateLeft(node);
+            node.Right = RotateRight(node.Right);   return RotateLeft(node);
         }
         return node;
     }
-    private int GetHeight(Node<T> node) { // Jaro
-        if (node == null) return 0;
-        return node.Height;
-    }
-    private int GetBalanceFactor(Node<T> node) { // Jaro
-        if (node == null) return 0;
-        return GetHeight(node.Left) - GetHeight(node.Right);
-    }
-    private Node<T> RotateRight(Node<T> y) { // Jaro
-        Node<T> x = y.Left;
-        Node<T> T3 = x.Right;
-        x.Right = y;
-        y.Left = T3;
-        
-        int ylefth = GetHeight(y.Left);
-        int yrightH = GetHeight(y.Right);
-        y.Height = 1 + (ylefth > yrightH ? ylefth : yrightH);
 
-        int xlefth = GetHeight(x.Left);
-        int xrightH = GetHeight(x.Right);
-        x.Height = 1 + (xlefth > xrightH ? xlefth : xrightH);
+    private int GetHeight(Node n) // Jaro
+    {
+        return n == null ? 0 : n.Height;
+    }
+    private int GetBalanceFactor(Node n) // Jaro
+    {
+        return n == null ? 0 : GetHeight(n.Left) - GetHeight(n.Right); //
+    }
+
+    private Node RotateRight(Node y) // jaro
+    {
+        Node x = y.Left, t = x.Right;
+        x.Right = y; y.Left = t;
+        y.Height = 1 + Math.Max(GetHeight(y.Left), GetHeight(y.Right));
+        x.Height = 1 + Math.Max(GetHeight(x.Left), GetHeight(x.Right));
         return x;
     }
-    private Node<T> RotateLeft(Node<T> x) { // Jaro
-        Node<T> y = x.Right;
-        Node<T> T2 = y.Left;
-        y.Left = x;
-        x.Right = T2;
 
-        int xlefth = GetHeight(x.Left);
-        int xrightH = GetHeight(x.Right);
-        x.Height = 1 + (xlefth > xrightH ? xlefth : xrightH);
-
-        int ylefth = GetHeight(y.Left);
-        int yrightH = GetHeight(y.Right);
-        y.Height = 1 + (ylefth > yrightH ? ylefth : yrightH);
-
+    private Node RotateLeft(Node x) // Jaro
+    {
+        Node y = x.Right, t = y.Left;
+        y.Left = x; x.Right = t;
+        x.Height = 1 + Math.Max(GetHeight(x.Left), GetHeight(x.Right));
+        y.Height = 1 + Math.Max(GetHeight(y.Left), GetHeight(y.Right));
         return y;
     }
-        public void Display(Node<T> root) // Jaro
-        {
-            if (root != null) {
-                Display(root.Left);
-                Console.WriteLine(root.Value);
-                Display(root.Right);
-            }
-        }
+
+    private void Display(Node root) // Jaro
+    {
+        if (root == null) return;
+        Display(root.Left);
+        Console.WriteLine(root.Value);
+        Display(root.Right);
     }
 
+    private class Node
+    {
+        public T Value;
+        public int Height;
+        public Node Left, Right;
+        public Node(T value) { Value = value; Height = 1; }
+    }
+
+    private class NodeRef : IEquatable<NodeRef>
+    {
+        public Node TreeNode;
+        public NodeRef(Node n) { TreeNode = n; }
+        public bool Equals(NodeRef other) => ReferenceEquals(TreeNode, other?.TreeNode);
+    }
+
+    private class MyStack
+    {
+        private MyLinkedList<NodeRef> _list = new();
+        public bool IsEmpty => _list.Count == 0;
+        public void Push(Node n) => _list.AddFirst(new NodeRef(n));
+        public Node Pop()
+        {
+            if (IsEmpty) return null;
+            _list.Reset();
+            NodeRef top = _list.Next();
+            _list.Remove(top);
+            return top.TreeNode;
+        }
+    }
+}
