@@ -1,23 +1,29 @@
 public class BstView : Serialize
 {
-    private IMyCollection<TaskItem> _bst;
+private BSTAVL<TaskItem> _bst;
 
-    public BstView(IMyCollection<TaskItem> bst)
+    public BstView(BSTAVL<TaskItem> bst)
     {
         _bst = bst;
     }
 
+
+    public void Fill()
+    {
+        _bst.Add(new TaskItem { ID = NewSerializeString(), Description = "Task 1", Completed = false });
+        _bst.Add(new TaskItem { ID = NewSerializeString(), Description = "Task 2", Completed = true });
+        _bst.Add(new TaskItem { ID = NewSerializeString(), Description = "Task 3", Completed = false });
+        _bst.Add(new TaskItem { ID = NewSerializeString(), Description = "Task 4", Completed = true });
+        _bst.Add(new TaskItem { ID = NewSerializeString(), Description = "Task 5", Completed = false });
+    }
     public void Display()
     {
         Console.WriteLine("Tasks in BST AVL:");
-
-        _bst.Add(new TaskItem { ID = NewSerializeString(), Description = "Game engine opzetten" });
-        _bst.Add(new TaskItem { ID = NewSerializeString(), Description = "Graphics ontwerpen" });
-        _bst.Add(new TaskItem { ID = NewSerializeString(), Description = "De game daadwerkelijk coderen" });
-
-        if(_bst is BSTAVL<TaskItem> bstAvl)
+        IMyIterator<TaskItem> iterator = _bst.GetIterator();
+        iterator.Reset();
+        while (iterator.HasNext())
         {
-            bstAvl.PrintTree();
+            Console.WriteLine(iterator.Next());
         }
     }
 }

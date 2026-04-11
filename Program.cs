@@ -2,8 +2,8 @@
 {
     static void Main(string[] args)
     {
-        //Bstview();
-        StartApp();
+        Bstview();
+        //StartApp();
     }
 
     private static void StartApp()
@@ -29,8 +29,9 @@
 
     public static void Bstview()
     {
-        IMyCollection<TaskItem> bst = new BSTAVL<TaskItem>();
+        BSTAVL<TaskItem> bst = new BSTAVL<TaskItem>();
         BstView view = new BstView(bst);
+        view.Fill();
         view.Display();
     }
 }
