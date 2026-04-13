@@ -227,7 +227,7 @@ public sealed class MyArray<T> : IMyCollection<T>, IMyIterator<T> where T : IEqu
         return true;
     }
 
-    public void Swap(int i, int j)
+    public void Swap(int i, int j) // jaro
     {
         if (i < 0 || i > _index || j < 0 || j > _index) return;
         T temp = _data[i];
