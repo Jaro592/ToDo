@@ -7,7 +7,10 @@ public class BSTAVL<T> : IMyCollection<T>, IMyIterator<T> where T : IComparable<
     public int Count => _count;
     public bool Dirty { get; set; }
 
-    public BSTAVL() { _stack = new MyStack(); }
+    public BSTAVL() 
+    { 
+        _stack = new MyStack(); 
+    }
 
 
     public void Add(T item)
@@ -195,18 +198,27 @@ public class BSTAVL<T> : IMyCollection<T>, IMyIterator<T> where T : IComparable<
         public Node(T value) { Value = value; Height = 1; }
     }
 
-    private class NodeRef : IEquatable<NodeRef>
+    private class NodeRef : IEquatable<NodeRef> // jaro
     {
         public Node TreeNode;
-        public NodeRef(Node n) { TreeNode = n; }
+        public NodeRef(Node n) 
+        { 
+            TreeNode = n; 
+        }
         public bool Equals(NodeRef other) => ReferenceEquals(TreeNode, other?.TreeNode);
     }
 
-    private class MyStack
+    private class MyStack // jaro
     {
         private MyLinkedList<NodeRef> _list = new();
-        public bool IsEmpty => _list.Count == 0;
-        public void Push(Node n) => _list.AddFirst(new NodeRef(n));
+        public bool IsEmpty
+        {
+            get { return _list.Count == 0; }
+        }
+        public void Push(Node n)
+        {
+            _list.AddFirst(new NodeRef(n));
+        }
         public Node Pop()
         {
             if (IsEmpty) return null;
