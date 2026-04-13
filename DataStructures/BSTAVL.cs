@@ -18,14 +18,22 @@ public class BSTAVL<T> : IMyCollection<T>, IMyIterator<T> where T : IComparable<
         int before = _count;
         bool added = false;
         _root = Insert(_root, item, ref added);
-        if (added) { _count++; Dirty = true; }
+        if (added) 
+        { 
+            _count++; 
+            Dirty = true; 
+        }
     }
 
     public void Remove(T item)
     {
         bool found = false;
         _root = Remove(_root, item, ref found);
-        if (found) { _count--; Dirty = true; }
+        if (found) 
+        { 
+            _count--; 
+            Dirty = true; 
+        }
     }
 
     public T? FindBy<K>(K key, Func<T, K, int> comparer)   // O(log n) Jaro
