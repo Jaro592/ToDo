@@ -37,7 +37,6 @@ public class TaskUserService : ITaskUserService // Basel
 
     public void RemoveAllRelationsForTask(string taskId) // Jaro
     {
-        // We maken een lijstje van alle relaties die we moeten verwijderen
         IMyCollection<TaskUser> toRemove = new MyLinkedList<TaskUser>();
 
         var iterator = _userTasks.GetIterator();
@@ -49,8 +48,6 @@ public class TaskUserService : ITaskUserService // Basel
                 toRemove.Add(relation);
             }
         }
-
-        // Nu verwijderen we ze daadwerkelijk uit onze hoofdlijst
         var removeIterator = toRemove.GetIterator();
         while (removeIterator.HasNext())
         {
