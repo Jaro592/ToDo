@@ -49,14 +49,8 @@ public class SpectreTaskView // Basel
 
             table.AddRow(
                 $"[white]{task.Description}[/]",
-<<<<<<< HEAD
-                status,
-                $"[cyan]{userNames}[/]",
-                $"[yellow]{task.Priority}[/]"
-=======
                 $"[red]{status}[/]",
                 $"[cyan]{userNames}[/]"
->>>>>>> 6406016 (fix status)
             );
         }
 
