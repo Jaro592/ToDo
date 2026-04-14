@@ -49,8 +49,9 @@ public class SpectreTaskView // Basel
 
             table.AddRow(
                 $"[white]{task.Description}[/]",
-                $"[red]status[/]",
-                $"[cyan]{userNames}[/]"
+                status,
+                $"[cyan]{userNames}[/]",
+                $"[yellow]{task.Priority}[/]"
             );
         }
 
