@@ -1,5 +1,6 @@
 using System;
 using System.Linq.Expressions;
+using Spectre.Console;
 
 public class ConsoleTaskView : ITaskView
 {
@@ -15,30 +16,6 @@ public class ConsoleTaskView : ITaskView
         _taskUserService = taskUserService;
     }
 
-    private void DisplayTasks(IMyCollection<TaskItem> tasks) //akif
-    {
-        Console.Clear();
-        Console.WriteLine("Controls: ↑ (up), ↓ (down), esc (exit), enter (pick)");
-        Console.WriteLine("\n=== ToDo List ===\n");
-
-        tasks.Sort((a, b) => a.ID.CompareTo(b.ID));
-        Console.WriteLine("---In progress---");
-        tasks.Reset();
-        var iterProgress = tasks.Filter(x => x.Completed == false).GetIterator();
-        while (iterProgress.HasNext())
-        {
-            Console.WriteLine(iterProgress.Next().ToString());
-        }
-
-        Console.WriteLine("\n---Completed---");
-        tasks.Reset();
-        var iterCompleted = tasks.Filter(x => x.Completed == true).GetIterator();
-        while (iterCompleted.HasNext())
-        {
-            Console.WriteLine(iterCompleted.Next().ToString());
-        }
-    }
-
     private string? Prompt(string prompt) //akif
     {
         Console.CursorVisible = true;
@@ -48,29 +25,36 @@ public class ConsoleTaskView : ITaskView
 
     public void Run() //akif
     {
+        Console.Clear();
         IMyCollection<string> menu = new MyArray<string>();
-        menu.Add("Add task");//0
-        menu.Add("Remove task");//1
-        menu.Add("Toggle task completion");//2
-        menu.Add("Add user");//3
-        menu.Add("Assign task to user"); //4
-        menu.Add("View tasks for user"); // 5
-        menu.Add("View users for task"); // 6
-        menu.Add("Remove user"); //7
-        menu.Add("Save"); // 8
-        menu.Add("Exit"); // 8
+        menu.Add("View Tasks");//0
+        menu.Add("Add task");//1
+        menu.Add("Remove task");//2
+        menu.Add("Toggle task completion");//3
+        menu.Add("Add user");//4
+        menu.Add("Assign task to user"); //5
+        menu.Add("View tasks for user"); // 6
+        menu.Add("View users for task"); // 7
+        menu.Add("Remove user"); //8
+        menu.Add("Save"); // 9
+        menu.Add("Exit"); // 10
 
         while (true)
         {
-            var tmp = _service.GetAllTasks();
-            DisplayTasks(tmp);
-
+            // Console.Clear();
             int menuStartLine = Console.CursorTop + 1;
             int selectedIndex = NavigateMenu(menu, menuStartLine, false);
-
             switch (selectedIndex)
             {
-                case 0:
+                case 0: // Basel
+
+                    var tmp = _service.GetAllTasks();
+                    var spectre = new SpectreTaskView(_userService, _taskUserService);
+                    spectre.DisplayTasks(tmp);
+                    Console.ReadKey();
+                    Console.Clear();
+                    break;
+                case 1:
                     string? description = Prompt("\nEnter task description: (type :qa to exit)\n>");
                     if (description == ":qa")
                     {
@@ -81,7 +65,7 @@ public class ConsoleTaskView : ITaskView
                     _service.AddTask(description);
                     break;
 
-                case 1:
+                case 2:
                     IMyCollection<TaskItem> tasks = _service.GetAllTasks();
                     if (tasks.Count == 0)
                     {
@@ -100,7 +84,7 @@ public class ConsoleTaskView : ITaskView
                     _service.RemoveTask(selectedTask.ID);
                     break;
 
-                case 2:
+                case 3:
                     IMyCollection<TaskItem> tasksToggle = _service.GetAllTasks();
                     if (tasksToggle.Count == 0)
                     {
@@ -119,7 +103,7 @@ public class ConsoleTaskView : ITaskView
                     _service.ToggleTaskCompletion(selectedTaskToggle.ID);
                     break;
 
-                case 3:
+                case 4:
                     string? name = Prompt("\nEnter user name: ");
                     if (string.IsNullOrWhiteSpace(name))
                     {
@@ -130,7 +114,7 @@ public class ConsoleTaskView : ITaskView
                     _userService.AddUser(name);
                     break;
 
-                case 4: // Basel
+                case 5: // Basel
 
                     var tasksAssign = _service.GetAllTasks();
                     if (tasksAssign.Count == 0)
@@ -185,7 +169,7 @@ public class ConsoleTaskView : ITaskView
                     Console.WriteLine("User assigned successfully");
                     Console.ReadKey();
                     break;
-                case 5:
+                case 6:
                     var usersView = _userService.GetAllUsers(); // Jaro
                     if (usersView.Count == 0)
                     {
@@ -216,13 +200,16 @@ public class ConsoleTaskView : ITaskView
                         break;
                     }
 
+
+                    var view = new SpectreTaskView(_userService, _taskUserService);
                     var tasksForUser = _taskUserService.GetTasksForUser(selectedUserView.UserID);
-                    DisplayTasks(tasksForUser);
+                    view.DisplayTasks(tasksForUser);
+
                     Console.WriteLine($"\nTasks for {selectedUserView}:");
                     Console.WriteLine("\nPress enter to continue");
                     Console.ReadKey();
                     break;
-                case 6:
+                case 7:
                     var tasksView = _service.GetAllTasks();
                     if (tasksView.Count == 0)
                     {
@@ -266,7 +253,7 @@ public class ConsoleTaskView : ITaskView
 
 
 
-                case 7:
+                case 8:
                     var usersForDeletion = _userService.GetAllUsers();
                     if (usersForDeletion.Count == 0)
                     {
@@ -289,13 +276,13 @@ public class ConsoleTaskView : ITaskView
 
                     break;
 
-                case 8:
+                case 9:
 
                     _userService.SaveAll();
                     _service.SaveAll();
                     _taskUserService.SaveAll();
                     break;
-                case 9:
+                case 10:
                     _userService.SaveAll();
                     _service.SaveAll();
                     _taskUserService.SaveAll();
