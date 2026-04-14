@@ -69,7 +69,7 @@ public sealed class MyLinkedList<T> : IMyCollection<T>, IMyIterator<T> where T :
 
     }
     // T? FindBy<K>(K key, Func<T, K, int> Comparer); // MyCollectio
-    public T FindBy<K>(K key, Func<T, K, int> Comparer)
+    public T FindBy<K>(K key, Func<T, K, int> Comparer) //Mehmet, Basel
     {
         Node<T>? current = First;
 
@@ -85,7 +85,7 @@ public sealed class MyLinkedList<T> : IMyCollection<T>, IMyIterator<T> where T :
         return default!;
 
     }
-    public IMyCollection<T> Filter(Func<T, bool> predicate)
+    public IMyCollection<T> Filter(Func<T, bool> predicate) //Basel
     {
         IMyCollection<T> result = new MyLinkedList<T>();
         if (First is null) return result;
@@ -165,7 +165,7 @@ public sealed class MyLinkedList<T> : IMyCollection<T>, IMyIterator<T> where T :
     public T Next()
     {
         if (!HasNext()) return default!;
-        if (_current == null) return default!;
+        // if (_current == null) return default!; Deleted by Basel
         T data = _current.Data;
         _current = _current.Next;
         return data;

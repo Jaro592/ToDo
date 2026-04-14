@@ -11,7 +11,7 @@ class JsonTaskRepository : ITaskRepository
         if (!File.Exists(_filePath)) return new MyArray<TaskItem>();
 
         string json = File.ReadAllText(_filePath);
-        
+
         TaskItem[]? rawArray = JsonSerializer.Deserialize<TaskItem[]>(json);
 
         if (rawArray == null) return new MyArray<TaskItem>();
@@ -45,7 +45,7 @@ class JsonTaskRepository : ITaskRepository
         while (iterator.HasNext())
         {
             var currentTask = iterator.Next();
-            if (currentTask.ID == taskId) 
+            if (currentTask.ID == taskId)
             {
                 return currentTask;
             }
