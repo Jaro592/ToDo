@@ -27,17 +27,17 @@ public class ConsoleTaskView : ITaskView
     {
         Console.Clear();
         IMyCollection<string> menu = new MyArray<string>();
-        menu.Add("View Tasks");//0
-        menu.Add("Add task");//1
-        menu.Add("Remove task");//2
-        menu.Add("Toggle task completion");//3
-        menu.Add("Add user");//4
-        menu.Add("Assign task to user"); //5
-        menu.Add("View tasks for user"); // 6
-        menu.Add("View users for task"); // 7
-        menu.Add("Remove user"); //8
-        menu.Add("Save"); // 9
-        menu.Add("Exit"); // 10
+        menu.Add("📋 View Tasks");              //0
+        menu.Add("➕ Add task");                //1
+        menu.Add("🗑️ Remove task");            //2
+        menu.Add("✔ Toggle task completion");  //3
+        menu.Add("👤 Add user");               //4
+        menu.Add("🔗 Assign task to user");    //5
+        menu.Add("📄 View tasks for user");    //6
+        menu.Add("👥 View users for task");    //7
+        menu.Add("❌ Remove user");            //8
+        menu.Add("💾 Save");                  //9
+        menu.Add("🚪 Exit");                  //10
 
         while (true)
         {
@@ -330,7 +330,14 @@ public class ConsoleTaskView : ITaskView
                 Console.SetCursorPosition(0, startLine + i);
 
                 if (i == selectedIndex)
-                    Console.Write($"> {item}   ");
+                {
+                    Console.ForegroundColor = ConsoleColor.Yellow;
+                    Console.Write($"▶ ");
+
+                    Console.ForegroundColor = ConsoleColor.Green;
+                    Console.Write($"{item}    ");
+                    Console.ResetColor();
+                }
                 else
                     Console.Write($"  {item}   ");
 
