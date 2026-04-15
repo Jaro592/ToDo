@@ -2,41 +2,81 @@
   {
     "ID": "20260323_143720_7809_6946",
     "Description": "it should be sortable",
-    "Completed": true
+    "Completed": true,
+    "Priority": 0,
+    "DependencyIds": {
+      "Count": 0,
+      "Dirty": false
+    }
   },
   {
     "ID": "20260323_143729_9592_7918",
     "Description": "it should be unique",
-    "Completed": false
+    "Completed": false,
+    "Priority": 0,
+    "DependencyIds": {
+      "Count": 0,
+      "Dirty": false
+    }
   },
   {
     "ID": "20260323_143738_7826_8174",
     "Description": "i think its good...",
-    "Completed": false
+    "Completed": false,
+    "Priority": 0,
+    "DependencyIds": {
+      "Count": 0,
+      "Dirty": false
+    }
   },
   {
     "ID": "20260326_133941_4902_6219",
     "Description": "making",
-    "Completed": true
+    "Completed": true,
+    "Priority": 0,
+    "DependencyIds": {
+      "Count": 0,
+      "Dirty": false
+    }
   },
   {
     "ID": "20260326_133945_5100_4880",
     "Description": "it",
-    "Completed": false
+    "Completed": false,
+    "Priority": 0,
+    "DependencyIds": {
+      "Count": 0,
+      "Dirty": false
+    }
   },
   {
     "ID": "20260326_133948_4573_1827",
     "Description": "work",
-    "Completed": false
+    "Completed": false,
+    "Priority": 0,
+    "DependencyIds": {
+      "Count": 0,
+      "Dirty": false
+    }
   },
   {
     "ID": "20260403_050157_8902_9709",
     "Description": "he",
-    "Completed": false
+    "Completed": false,
+    "Priority": 0,
+    "DependencyIds": {
+      "Count": 0,
+      "Dirty": false
+    }
   },
   {
     "ID": "20260409_131516_7877_9195",
     "Description": "fghfghf",
-    "Completed": false
+    "Completed": false,
+    "Priority": 0,
+    "DependencyIds": {
+      "Count": 0,
+      "Dirty": false
+    }
   }
 ]

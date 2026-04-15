@@ -33,6 +33,8 @@ public class ConsoleTaskView : ITaskView
     {
         Console.Clear(); // akif
         IMyCollection<string> menu = new MyArray<string>();
+
+        // menu.Add("📋 View Tasks");              //0
         menu.Add("➕ Add task");                //0
         menu.Add("🗑️ Remove task");            //1
         menu.Add("✔ Toggle task completion");  //2
@@ -41,8 +43,11 @@ public class ConsoleTaskView : ITaskView
         menu.Add("📄 View tasks for user");    //5
         menu.Add("👥 View users for task");    //6
         menu.Add("❌ Remove user");            //7
-        menu.Add("💾 Save");                  //8
-        menu.Add("🚪 Exit");                  //9
+        menu.Add("🔗 Add dependency");         //8
+        menu.Add("💾 Save");                  //9
+        menu.Add("🚪 Exit");                  //10
+
+
 
         while (true)
         {
@@ -90,30 +95,38 @@ public class ConsoleTaskView : ITaskView
                     break;
 
                 case 2:
-                    Console.Clear(); // akif
-                    IMyCollection<TaskItem> taskListToToggle = _service.GetAllTasks(); // akif
-                    if (taskListToToggle.Count == 0)
+                    IMyCollection<TaskItem> tasksToggle = _service.GetAllTasks();
+                    if (tasksToggle.Count == 0)
                     {
-                        Pause("\nThere are no tasks to toggle"); // akif
+                        Console.WriteLine("\nThere are no tasks to toggle, press enter to continue");
+                        Console.ReadKey();
                         break;
                     }
-                    int idxTasksToggle = NavigateMenu(taskListToToggle, 0); // akif
+                    int idxTasksToggle = NavigateMenu(tasksToggle, 0);
                     if (idxTasksToggle == -1)
                     {
-                        Pause("\nNo task selected"); // akif
+                        System.Console.WriteLine("\nNo task selected, press enter to continue");
+                        Console.ReadKey();
                         break;
                     }
-                    TaskItem selectedTaskToggle = GetAtIndex(taskListToToggle, idxTasksToggle); // akif
-                    _service.ToggleTaskCompletion(selectedTaskToggle.ID);
-                    Pause("task updated"); // akif
+                    TaskItem selectedTaskToggle = GetAtIndex(tasksToggle, idxTasksToggle);
+                    var success = _service.ToggleTaskCompletion(selectedTaskToggle.ID);
+
+                    if (!success)
+                    {
+                        Console.ForegroundColor = ConsoleColor.Red;
+                        Console.WriteLine("\nCannot complete task, dependencies not finished");
+                        Console.ResetColor();
+                        Console.ReadKey();
+                        Console.Clear();
+                    }
                     break;
 
                 case 3:
-                    Console.Clear(); // akif
                     string? name = Prompt("\nEnter user name: ");
                     if (string.IsNullOrWhiteSpace(name))
                     {
-                        Pause("\nInvalid name"); // akif
+                        Pause("\nInvalid name");
                         break;
                     }
                     var added = _userService.AddUser(name);
@@ -122,28 +135,30 @@ public class ConsoleTaskView : ITaskView
                         Console.ForegroundColor = ConsoleColor.Red;
                         Console.WriteLine("User already exists");
                         Console.ResetColor();
-                        Pause(); // akif
+                        Pause();
                     }
                     else
                     {
                         Pause("user added"); // akif
                     }
-
+                    Console.WriteLine("User Added successfully");
+                    Console.ReadKey();
+                    Console.Clear();
                     break;
 
                 case 4: // Basel
-                    Console.Clear(); // akif
+                    Console.Clear();
                     var tasksAssign = _service.GetAllTasks();
                     if (tasksAssign.Count == 0)
                     {
-                        Pause("There are no tasks"); // akif
+                        Pause("There are no tasks");
                         break;
                     }
 
                     int idx = NavigateMenu(tasksAssign, 0);
                     if (idx == -1)
                     {
-                        Pause("No task selected"); // akif
+                        Pause("No task selected");
                         break;
                     }
 
@@ -152,14 +167,14 @@ public class ConsoleTaskView : ITaskView
                     var users = _userService.GetAllUsers();
                     if (users.Count == 0)
                     {
-                        Pause("There are no users"); // akif
+                        Pause("There are no users");
                         break;
                     }
 
                     int userIdx = NavigateMenu(users, 0);
                     if (userIdx == -1)
                     {
-                        Pause("No user selected"); // akif
+                        Pause("No user selected");
                         break;
                     }
 
@@ -169,7 +184,7 @@ public class ConsoleTaskView : ITaskView
 
                     if (!assigned)
                     {
-                        Pause("User already assigned to this task"); // akif
+                        Pause("User already assigned to this task");
                         break;
                     }
 
@@ -181,14 +196,14 @@ public class ConsoleTaskView : ITaskView
                     var usersView = _userService.GetAllUsers(); // Jaro
                     if (usersView.Count == 0)
                     {
-                        Pause("There are no users"); // akif
+                        Pause("There are no users");
                         break;
                     }
 
                     int userIdxView = NavigateMenu(usersView, 0);
-                    if (userIdxView == -1) // akif
+                    if (userIdxView == -1)
                     {
-                        Pause("No user selected"); // akif
+                        Pause("No user selected");
                         break;
                     }
 
@@ -215,17 +230,17 @@ public class ConsoleTaskView : ITaskView
                     break;
 
                 case 6:
-                    Console.Clear(); // akif
-                    var tasksView = _service.GetAllTasks(); // akif
+                    Console.Clear();
+                    var tasksView = _service.GetAllTasks();
                     if (tasksView.Count == 0)
                     {
-                        Pause("There are no tasks"); // akif
+                        Pause("There are no tasks");
                         break;
                     }
                     int taskIdx = NavigateMenu(tasksView, 0);
-                    if (taskIdx == -1) // akif
+                    if (taskIdx == -1)
                     {
-                        Pause("No task selected"); // akif
+                        Pause("No task selected");
                         break;
                     }
                     TaskItem selectedTaskView = GetAtIndex(tasksView, taskIdx);
@@ -279,14 +294,64 @@ public class ConsoleTaskView : ITaskView
                     Pause("User removed"); // akif
                     break;
 
+
                 case 8:
+                    var tasksDep = _service.GetAllTasks();
+
+                    if (tasksDep.Count == 0)
+                    {
+                        Console.WriteLine("No tasks available");
+                        Console.ReadKey();
+                        break;
+                    }
+                    Console.Clear();
+                    Console.WriteLine("\nSelect task (the one you want to complete): ");
+
+                    int dtaskIdx = NavigateMenu(tasksDep, Console.CursorTop, false);
+                    if (dtaskIdx == -1) break;
+
+                    TaskItem task = GetAtIndex(tasksDep, dtaskIdx);
+
+                    Console.Clear();
+                    Console.WriteLine("\nSelect dependency (must be completed first): ");
+
+
+                    int depIdx = NavigateMenu(tasksDep, Console.CursorTop, false);
+                    if (depIdx == -1) break;
+
+                    TaskItem dependency = GetAtIndex(tasksDep, depIdx);
+
+                    var Depadded = _service.AddDependency(task.ID, dependency.ID);
+
+                    if (!Depadded)
+                    {
+                        Console.ForegroundColor = ConsoleColor.Red;
+                        Console.WriteLine("\nFailed to add dependency");
+                        Console.ReadKey();
+                        Console.Clear();
+                    }
+                    else
+                    {
+
+                        Console.ForegroundColor = ConsoleColor.Green;
+                        Console.WriteLine("\nDependency added successfully");
+                        Console.ReadKey();
+                        Console.Clear();
+                    }
+
+                    Console.ResetColor();
+                    break;
+
+                case 9:
+
                     _userService.SaveAll();
                     _service.SaveAll();
                     _taskUserService.SaveAll();
                     Pause("Saved"); // akif
                     break;
 
-                case 9:
+                case 10:
+
                     _userService.SaveAll();
                     _service.SaveAll();
                     _taskUserService.SaveAll();

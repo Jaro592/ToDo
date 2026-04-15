@@ -5,11 +5,11 @@ public interface ITaskService
     IMyCollection<TaskItem> GetAllTasks();
     void AddTask(string? description);
     void RemoveTask(string id);
-    void ToggleTaskCompletion(string id);
-
+    bool ToggleTaskCompletion(string id);
+    bool AddDependency(string taskId, string dependencyId);
     void SaveAll(); // jaro
 
-    
+
 
     // void AddUser(string name);
     // User FindUser(string name);
