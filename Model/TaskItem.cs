@@ -6,6 +6,8 @@ public class TaskItem : IEquatable<TaskItem>, IComparable<TaskItem> // jaro
     // public string? AssignedUser { get; set; }
     public int Priority { get; set; } // jaro
 
+    public IMyCollection<string> DependencyIds { get; set; } = new MyLinkedList<string>(); //Basel
+
     public override bool Equals(object? obj) // jaro
     {
         return Equals(obj as TaskItem);

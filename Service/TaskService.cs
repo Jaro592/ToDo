@@ -21,32 +21,86 @@ class TaskSerivce : Serialize, ITaskService
         var newTask = new TaskItem { ID = newId, Description = description, Completed = false };
         _tasks.Add(newTask);
     }
-    public void RemoveTask(string id)
+    public void RemoveTask(string id) // Remove Dependency by Basel
     {
-        var task = _tasks.FindBy(id, (t, key) => t.ID.CompareTo(key));
+        var task = FindTask(id);
+        if (task == null) return;
 
-        if (task != null)
+        var it = _tasks.GetIterator();
+        while (it.HasNext())
         {
-            _taskUserService.RemoveAllRelationsForTask(id);  //jaro
-            _tasks.Remove(task);
-
+            var t = it.Next();
+            t.DependencyIds.Remove(id);
         }
+
+
+        _taskUserService.RemoveAllRelationsForTask(id);  //jaro
+        _tasks.Remove(task);
+
+
     }
 
-    public void ToggleTaskCompletion(string id)
+    public bool ToggleTaskCompletion(string id) // changes by Basel
     {
-        var task = _tasks.FindBy(id, (t, key) => t.ID.CompareTo(key));
+        var task = FindTask(id);
 
-        if (task != null)
+        if (task is null) return false;
+
+        if (!task.Completed)
         {
-            task.Completed = !task.Completed;
-            //_repository.SaveTasks(_tasks);
+            if (!CanComplete(task))
+                return false;
         }
+
+        task.Completed = !task.Completed;
+        return true;
+        //_repository.SaveTasks(_tasks);
+
     }
 
     public void SaveAll() // jaro
     {
         _repository.SaveTasks(_tasks);
+    }
+    public TaskItem? FindTask(string id) // Basel
+    {
+        return _tasks.FindBy(id, (task, key) => task.ID.CompareTo(key));
+    }
+    public bool AddDependency(string taskId, string dependencyId) //Basel
+    {
+        if (taskId.Equals(dependencyId)) return false;
+
+        var task = FindTask(taskId);
+        var dependecy = FindTask(dependencyId);
+
+        if (task is null || dependecy is null) return false;
+
+        var it = task.DependencyIds.GetIterator();
+        while (it.HasNext())
+        {
+            if (it.Next().Equals(dependencyId)) return false;
+        }
+
+        task.DependencyIds.Add(dependencyId);
+
+        return true;
+    }
+
+    public bool CanComplete(TaskItem task)
+    {
+        var it = task.DependencyIds.GetIterator();
+
+        while (it.HasNext())
+        {
+            var depId = it.Next();
+            var depTask = FindTask(depId);
+            if (depTask == null || !depTask.Completed)
+            {
+                return false;
+            }
+        }
+
+        return true;
     }
 
 }

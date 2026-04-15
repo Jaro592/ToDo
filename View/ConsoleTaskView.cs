@@ -36,8 +36,9 @@ public class ConsoleTaskView : ITaskView
         menu.Add("📄 View tasks for user");    //6
         menu.Add("👥 View users for task");    //7
         menu.Add("❌ Remove user");            //8
-        menu.Add("💾 Save");                  //9
-        menu.Add("🚪 Exit");                  //10
+        menu.Add("🔗 Add dependency");         //9
+        menu.Add("💾 Save");                  //10
+        menu.Add("🚪 Exit");                  //11
 
         while (true)
         {
@@ -100,7 +101,15 @@ public class ConsoleTaskView : ITaskView
                         break;
                     }
                     TaskItem selectedTaskToggle = GetAtIndex(tasksToggle, idxTasksToggle);
-                    _service.ToggleTaskCompletion(selectedTaskToggle.ID);
+                    var success = _service.ToggleTaskCompletion(selectedTaskToggle.ID);
+
+                    if (!success)
+                    {
+                        Console.ForegroundColor = ConsoleColor.Red;
+                        Console.WriteLine("\nCannot complete task, dependencies not finished");
+                        Console.ResetColor();
+                        Console.ReadKey();
+                    }
                     break;
 
                 case 4:
@@ -287,12 +296,53 @@ public class ConsoleTaskView : ITaskView
                     break;
 
                 case 9:
+                    var tasksDep = _service.GetAllTasks();
+
+                    if (tasksDep.Count == 0)
+                    {
+                        Console.WriteLine("No tasks available");
+                        Console.ReadKey();
+                        break;
+                    }
+                    Console.WriteLine("Select task:");
+                    int dtaskIdx = NavigateMenu(tasksDep, 0);
+                    if (dtaskIdx == -1) break;
+
+                    TaskItem task = GetAtIndex(tasksDep, dtaskIdx);
+
+                    Console.WriteLine("Select dependency:");
+                    int depIdx = NavigateMenu(tasksDep, 0);
+                    if (depIdx == -1) break;
+
+                    TaskItem dependency = GetAtIndex(tasksDep, depIdx);
+
+                    var Depadded = _service.AddDependency(task.ID, dependency.ID);
+
+                    if (!Depadded)
+                    {
+                        Console.ForegroundColor = ConsoleColor.Red;
+                        Console.WriteLine("Failed to add dependency");
+                    }
+                    else
+                    {
+
+                        Console.ForegroundColor = ConsoleColor.Green;
+                        Console.WriteLine("\nDependency added successfully");
+                    }
+
+                    Console.ResetColor();
+                    Console.ReadKey();
+                    break;
+
+
+
+                case 10:
 
                     _userService.SaveAll();
                     _service.SaveAll();
                     _taskUserService.SaveAll();
                     break;
-                case 10:
+                case 11:
                     _userService.SaveAll();
                     _service.SaveAll();
                     _taskUserService.SaveAll();
