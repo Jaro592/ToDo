@@ -64,6 +64,9 @@ public class ConsoleTaskView : ITaskView
                         break;
                     }
                     _service.AddTask(description);
+                    Console.WriteLine("Task Added Ssuccessfully");
+                    Console.ReadKey();
+                    Console.Clear();
                     break;
 
                 case 2:
@@ -109,6 +112,7 @@ public class ConsoleTaskView : ITaskView
                         Console.WriteLine("\nCannot complete task, dependencies not finished");
                         Console.ResetColor();
                         Console.ReadKey();
+                        Console.Clear();
                     }
                     break;
 
@@ -130,7 +134,9 @@ public class ConsoleTaskView : ITaskView
                         Console.ReadKey();
                         Console.Clear();
                     }
-
+                    Console.WriteLine("User Added successfully");
+                    Console.ReadKey();
+                    Console.Clear();
                     break;
 
                 case 5: // Basel
@@ -304,14 +310,19 @@ public class ConsoleTaskView : ITaskView
                         Console.ReadKey();
                         break;
                     }
-                    Console.WriteLine("Select task:");
-                    int dtaskIdx = NavigateMenu(tasksDep, 0);
+                    Console.Clear();
+                    Console.WriteLine("\nSelect task (the one you want to complete): ");
+
+                    int dtaskIdx = NavigateMenu(tasksDep, Console.CursorTop, false);
                     if (dtaskIdx == -1) break;
 
                     TaskItem task = GetAtIndex(tasksDep, dtaskIdx);
 
-                    Console.WriteLine("Select dependency:");
-                    int depIdx = NavigateMenu(tasksDep, 0);
+                    Console.Clear();
+                    Console.WriteLine("\nSelect dependency (must be completed first): ");
+
+
+                    int depIdx = NavigateMenu(tasksDep, Console.CursorTop, false);
                     if (depIdx == -1) break;
 
                     TaskItem dependency = GetAtIndex(tasksDep, depIdx);
@@ -321,17 +332,21 @@ public class ConsoleTaskView : ITaskView
                     if (!Depadded)
                     {
                         Console.ForegroundColor = ConsoleColor.Red;
-                        Console.WriteLine("Failed to add dependency");
+                        Console.WriteLine("\nFailed to add dependency");
+                        Console.ReadKey();
+                        Console.Clear();
                     }
                     else
                     {
 
                         Console.ForegroundColor = ConsoleColor.Green;
                         Console.WriteLine("\nDependency added successfully");
+                        Console.ReadKey();
+                        Console.Clear();
                     }
 
                     Console.ResetColor();
-                    Console.ReadKey();
+
                     break;
 
 
