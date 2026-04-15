@@ -4,6 +4,15 @@
     {
         //Bstview();
         StartApp();
+        // var ht = new HashTable<string, int>();
+
+        // ht.Add("A", 1);
+        // ht.Add("B", 2);
+        // ht.Add("A", 5);
+
+        // Console.WriteLine(ht.Get("A"));
+        // Console.WriteLine(ht.Get("B"));
+        // Console.WriteLine(ht.Get("C"));
     }
 
     private static void StartApp()

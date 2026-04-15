@@ -7,5 +7,5 @@ public interface ITaskUserRepository // Basel
 
     // void Save(IMyCollection<TaskUser> relations);
 
-    public IMyCollection<string> GetTasksForUser(IMyCollection<TaskUser> allRelations, string userId); // jaro
+    IMyCollection<string> GetTasksForUser(IMyCollection<TaskUser> allRelations, string userId); // jaro
 }
