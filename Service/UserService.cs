@@ -12,18 +12,25 @@ public class UserService : Serialize, IUserService
         _users = _userRepository.LoadUsers(); // jaro load users once and keep in memory to avoid multiple file reads
     }
 
-    public void AddUser(string name)
+    public bool AddUser(string name)
     {
+        if (FindUser(name) != null)
+        {
+            return false;
+        }
         string newId = NewSerializeString();
         var user = new User(name);
         user.UserID = newId;
         _users.Add(user);
+
+        return true;
     }
 
     public User? FindUser(string name)
     {
+        name = name.Trim();
 
-        return _users.FindBy(name, (k, key) => k.Name.CompareTo(key)); // jaro use my own storage instead of loading from json every time
+        return _users.FindBy(name, (k, key) => string.Compare(k.Name, key, StringComparison.OrdinalIgnoreCase)); // jaro use my own storage instead of loading from json every time,  changes by Basel
 
     }
 

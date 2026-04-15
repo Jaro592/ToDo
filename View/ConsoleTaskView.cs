@@ -109,9 +109,19 @@ public class ConsoleTaskView : ITaskView
                     {
                         Console.WriteLine("\nInvalid name, press enter to continue");
                         Console.ReadKey();
+                        Console.Clear();
                         break;
                     }
-                    _userService.AddUser(name);
+                    var added = _userService.AddUser(name);
+                    if (!added)
+                    {
+                        Console.ForegroundColor = ConsoleColor.Red;
+                        Console.WriteLine("User already exists, press enter to continue");
+                        Console.ResetColor();
+                        Console.ReadKey();
+                        Console.Clear();
+                    }
+
                     break;
 
                 case 5: // Basel
