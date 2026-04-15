@@ -12,9 +12,4 @@ public interface IMyCollection<T>
 
     IMyIterator<T> GetIterator();
     IMyCollection<T> GetEnumerator();
-
-    bool HasNext(); // checks if there is another element in the collection
-    T Next(); // gets the next element in the collection
-    void Reset(); // resets the iterator to the beginning of the collection
-
 }

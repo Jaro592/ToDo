@@ -19,8 +19,8 @@ public class SpectreTaskView // Basel
         table.AddColumn("[green]Users[/]");
         table.AddColumn("[magenta]Priority[/]");
 
-        tasks.Reset();
         var iter = tasks.GetIterator();
+        iter.Reset();
 
         while (iter.HasNext())
         {
