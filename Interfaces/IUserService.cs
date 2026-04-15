@@ -1,6 +1,6 @@
 public interface IUserService
 {
-    void AddUser(string name);
+    bool AddUser(string name);
     User? FindUser(string name);
     bool DeleteUser(string name); //akif
 
