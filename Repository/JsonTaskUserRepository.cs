@@ -3,21 +3,23 @@ using System.Text.Json;
 public class JsonTaskUserRepository : ITaskUserRepository
 {
     private readonly string _filePath;
-    public JsonTaskUserRepository(string filePath)
+    private readonly IMyCollection<TaskUser> _relations;
+    public JsonTaskUserRepository(string filePath, IMyCollection<TaskUser> relations)
     {
         _filePath = filePath;
+        _relations = relations;
     }
 
     public IMyCollection<TaskUser> Load() // Basel
     {
-        if (!File.Exists(_filePath)) return new MyLinkedList<TaskUser>();
+        if (!File.Exists(_filePath)) return _relations;
 
         string json = File.ReadAllText(_filePath);
         TaskUser[]? rawArray = JsonSerializer.Deserialize<TaskUser[]>(json);
 
-        if (rawArray == null) return new MyLinkedList<TaskUser>();
+        if (rawArray == null) return _relations;
 
-        IMyCollection<TaskUser> relations = new MyLinkedList<TaskUser>();
+        IMyCollection<TaskUser> relations = _relations;
 
         foreach (var item in rawArray)
         {

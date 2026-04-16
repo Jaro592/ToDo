@@ -55,8 +55,8 @@
     "Completed": false,
     "Priority": 0,
     "DependencyIds": {
-      "Count": 1,
-      "Dirty": true
+      "Count": 0,
+      "Dirty": false
     }
   },
   {

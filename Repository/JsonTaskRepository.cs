@@ -4,11 +4,16 @@ using System.Text.Json;
 class JsonTaskRepository : ITaskRepository
 {
     private readonly string _filePath;
-    public JsonTaskRepository(string filePath) => _filePath = filePath;
+    private readonly IMyCollection<TaskItem> _tasks;
+    public JsonTaskRepository(string filePath, IMyCollection<TaskItem> tasks)
+    {
+        _filePath = filePath;
+        _tasks = tasks;
+    } 
 
     public IMyCollection<TaskItem> LoadTasks()
     {
-        if (!File.Exists(_filePath)) return new MyArray<TaskItem>();
+        if (!File.Exists(_filePath)) return _tasks;
 
         string json = File.ReadAllText(_filePath);
 
@@ -16,7 +21,7 @@ class JsonTaskRepository : ITaskRepository
 
         if (rawArray == null) return new MyArray<TaskItem>();
 
-        MyArray<TaskItem> myCollection = new MyArray<TaskItem>(rawArray.Length);
+        IMyCollection<TaskItem> myCollection = _tasks;
         foreach (var item in rawArray)
         {
             myCollection.Add(item);
