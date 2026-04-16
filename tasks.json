@@ -32,7 +32,7 @@
   {
     "ID": "20260326_133941_4902_6219",
     "Description": "making",
-    "Completed": true,
+    "Completed": false,
     "Priority": 0,
     "DependencyIds": {
       "Count": 0,
@@ -42,7 +42,7 @@
   {
     "ID": "20260326_133945_5100_4880",
     "Description": "it",
-    "Completed": false,
+    "Completed": true,
     "Priority": 0,
     "DependencyIds": {
       "Count": 0,
@@ -55,8 +55,8 @@
     "Completed": false,
     "Priority": 0,
     "DependencyIds": {
-      "Count": 0,
-      "Dirty": false
+      "Count": 1,
+      "Dirty": true
     }
   },
   {

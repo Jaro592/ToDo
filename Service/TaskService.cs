@@ -66,14 +66,14 @@ class TaskSerivce : Serialize, ITaskService
     {
         return _tasks.FindBy(id, (task, key) => task.ID.CompareTo(key));
     }
-    public bool AddDependency(string taskId, string dependencyId) //Basel
+    public bool AddDependency(string taskId, string dependencyId)
     {
         if (taskId.Equals(dependencyId)) return false;
 
         var task = FindTask(taskId);
-        var dependecy = FindTask(dependencyId);
+        var dependency = FindTask(dependencyId);
 
-        if (task is null || dependecy is null) return false;
+        if (task is null || dependency is null) return false;
 
         var it = task.DependencyIds.GetIterator();
         while (it.HasNext())
@@ -81,9 +81,44 @@ class TaskSerivce : Serialize, ITaskService
             if (it.Next().Equals(dependencyId)) return false;
         }
 
-        task.DependencyIds.Add(dependencyId);
+        // cycle detection — can we reach taskId starting from dependencyId?
+        if (WouldCreateCycle(taskId, dependencyId)) return false;
 
+        task.DependencyIds.Add(dependencyId);
         return true;
+    }
+
+    private bool WouldCreateCycle(string taskId, string dependencyId)
+    {
+        var visited = new MyArray<string>();
+        var stack = new MyLinkedList<string>();
+        stack.AddFirst(dependencyId);
+
+        while (stack.Count > 0)
+        {
+            stack.Reset();
+            string current = stack.Next();
+            stack.Remove(current);
+
+            if (current.Equals(taskId)) return true;
+
+            // check if already visited
+            if (visited.FindBy(current, (s, k) => s.CompareTo(k)) != null) continue;
+            visited.Add(current);
+
+            var currentTask = FindTask(current);
+            if (currentTask is null) continue;
+
+            var iter = currentTask.DependencyIds.GetIterator();
+            while (iter.HasNext())
+            {
+                string nextId = iter.Next();
+                if (visited.FindBy(nextId, (s, k) => s.CompareTo(k)) == null)
+                    stack.AddFirst(nextId);
+            }
+        }
+
+        return false;
     }
 
     public bool CanComplete(TaskItem task)
