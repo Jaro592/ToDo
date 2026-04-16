@@ -4,7 +4,15 @@ public class TaskItem : IEquatable<TaskItem>, IComparable<TaskItem> // jaro
     public required string Description { get; set; }
     public bool Completed { get; set; }
     // public string? AssignedUser { get; set; }
-    public int Priority { get; set; } // jaro
+    public int Priority { get; set; } = 1; // 1 = Low, 2 = Medium, 3 = High
+
+    public string PriorityText => Priority switch //akif
+    {
+        1 => "Low",
+        2 => "Medium",
+        3 => "High",
+        _ => "Low"
+    };
 
     public override bool Equals(object? obj) // jaro
     {

@@ -41,8 +41,9 @@ public class ConsoleTaskView : ITaskView
         menu.Add("📄 View tasks for user");    //5
         menu.Add("👥 View users for task");    //6
         menu.Add("❌ Remove user");            //7
-        menu.Add("💾 Save");                  //8
-        menu.Add("🚪 Exit");                  //9
+        menu.Add("🛠 Change task priority");   //8 // akif
+        menu.Add("💾 Save");                  //9
+        menu.Add("🚪 Exit");                  //10
 
         while (true)
         {
@@ -66,7 +67,11 @@ public class ConsoleTaskView : ITaskView
                         Pause("no task added"); // akif
                         break;
                     }
-                    _service.AddTask(description); // akif
+                    Console.WriteLine("\nChoose priority:\n1) Low\n2) Medium\n3) High");
+                    string? priorityInput = Prompt("> ");
+                    int priority = int.TryParse(priorityInput, out var parsedPriority) ? parsedPriority : 1;
+                    if (priority < 1 || priority > 3) priority = 1;
+                    _service.AddTask(description, priority); // akif
                     Pause("task added"); // akif
                     break;
 
@@ -280,13 +285,36 @@ public class ConsoleTaskView : ITaskView
                     break;
 
                 case 8:
+                    Console.Clear();
+                    var tasksForPriority = _service.GetAllTasks();
+                    if (tasksForPriority.Count == 0)
+                    {
+                        Pause("There are no tasks");
+                        break;
+                    }
+                    int selectedTaskPriority = NavigateMenu(tasksForPriority, 0);
+                    if (selectedTaskPriority == -1)
+                    {
+                        Pause("No task selected");
+                        break;
+                    }
+                    TaskItem selectedTaskForPriority = GetAtIndex(tasksForPriority, selectedTaskPriority);
+                    Console.WriteLine("\nChoose new priority:\n1) Low\n2) Medium\n3) High");
+                    string? newPriorityInput = Prompt("> ");
+                    int newPriority = int.TryParse(newPriorityInput, out var parsedNewPriority) ? parsedNewPriority : 1;
+                    if (newPriority < 1 || newPriority > 3) newPriority = 1;
+                    _service.SetTaskPriority(selectedTaskForPriority.ID, newPriority);
+                    Pause("priority updated");
+                    break;
+
+                case 9:
                     _userService.SaveAll();
                     _service.SaveAll();
                     _taskUserService.SaveAll();
                     Pause("Saved"); // akif
                     break;
 
-                case 9:
+                case 10:
                     _userService.SaveAll();
                     _service.SaveAll();
                     _taskUserService.SaveAll();
