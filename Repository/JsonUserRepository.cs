@@ -4,18 +4,20 @@ using System.Text.Json;
 public class JsonUserRepository : IUserRepository
 {
     private readonly string _filePath;
-    public JsonUserRepository(string filePath)
+    private readonly IMyCollection<User> _users;
+    public JsonUserRepository(string filePath, IMyCollection<User> users)
     {
         _filePath = filePath;
+        _users = users;
     }
 
     public IMyCollection<User> LoadUsers()
     {
-        if (!File.Exists(_filePath)) return new MyLinkedList<User>();
+        if (!File.Exists(_filePath)) return _users;
         string json = File.ReadAllText(_filePath);
         User[]? rawUsers = JsonSerializer.Deserialize<User[]>(json);
-        if (rawUsers == null) return new MyLinkedList<User>();
-        IMyCollection<User> users = new MyLinkedList<User>();
+        if (rawUsers == null) return _users;
+        IMyCollection<User> users = _users;
         foreach (var user in rawUsers)
         {
             users.Add(user);

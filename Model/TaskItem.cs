@@ -14,6 +14,8 @@ public class TaskItem : IEquatable<TaskItem>, IComparable<TaskItem> // jaro
         _ => "Low"
     };
 
+    public MyLinkedList<string> DependencyIds { get; set; } = new MyLinkedList<string>(); //Basel
+
     public override bool Equals(object? obj) // jaro
     {
         return Equals(obj as TaskItem);
