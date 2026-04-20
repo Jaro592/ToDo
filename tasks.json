@@ -47,8 +47,8 @@
     "ID": "20260326_133945_5100_4880",
     "Description": "it",
     "Completed": true,
-    "Priority": 0,
-    "PriorityText": "Low",
+    "Priority": 3,
+    "PriorityText": "High",
     "DependencyIds": {
       "Count": 0,
       "Dirty": false

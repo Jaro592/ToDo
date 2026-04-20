@@ -40,20 +40,7 @@ public class JsonUserRepository : IUserRepository
     }
     public User GetById(string userId) // Basel
     {
-        var allUsers = this.LoadUsers();
-        var iterator = allUsers.GetIterator();
-
-        while (iterator.HasNext())
-        {
-            var currentUser = iterator.Next();
-
-            if (currentUser.UserID == userId)
-            {
-                return currentUser;
-            }
-        }
-
-        return null;
+        return _users.FindBy(userId, (user, id) => string.Compare(user.UserID, id, StringComparison.Ordinal));
     }
 
 }

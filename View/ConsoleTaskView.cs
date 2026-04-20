@@ -44,7 +44,7 @@ public class ConsoleTaskView : ITaskView
         menu.Add("👥 View users for task");    //6
         menu.Add("❌ Remove user");            //7
         menu.Add("🛠 Change task priority");   //8 // akif
-        menu.Add("🔗 Add dependency");         //8        
+        menu.Add("🔗 Add dependency");         //8
         menu.Add("💾 Save");                  //9
         menu.Add("🚪 Exit");                  //10
 
@@ -87,7 +87,8 @@ public class ConsoleTaskView : ITaskView
                         Pause("\nThere are no tasks to delete"); // akif
                         break;
                     }
-                    int idxTasks = NavigateMenu(taskListToRemove, 0); // akif
+                    new SpectreTaskView(_userService, _taskUserService).DisplayTasks(taskListToRemove);
+                    int idxTasks = NavigateMenu(taskListToRemove, Console.CursorTop, false); // akif
                     if (idxTasks == -1)
                     {
                         Pause("\nNo task selected"); // akif
@@ -99,6 +100,7 @@ public class ConsoleTaskView : ITaskView
                     break;
 
                 case 2:
+                    Console.Clear();
                     IMyCollection<TaskItem> tasksToggle = _service.GetAllTasks();
                     if (tasksToggle.Count == 0)
                     {
@@ -106,7 +108,8 @@ public class ConsoleTaskView : ITaskView
                         Console.ReadKey();
                         break;
                     }
-                    int idxTasksToggle = NavigateMenu(tasksToggle, 0);
+                    new SpectreTaskView(_userService, _taskUserService).DisplayTasks(tasksToggle);
+                    int idxTasksToggle = NavigateMenu(tasksToggle, Console.CursorTop, false);
                     if (idxTasksToggle == -1)
                     {
                         System.Console.WriteLine("\nNo task selected, press enter to continue");
@@ -158,8 +161,8 @@ public class ConsoleTaskView : ITaskView
                         Pause("There are no tasks");
                         break;
                     }
-
-                    int idx = NavigateMenu(tasksAssign, 0);
+                    new SpectreTaskView(_userService, _taskUserService).DisplayTasks(tasksAssign);
+                    int idx = NavigateMenu(tasksAssign, Console.CursorTop, false);
                     if (idx == -1)
                     {
                         Pause("No task selected");
@@ -175,7 +178,9 @@ public class ConsoleTaskView : ITaskView
                         break;
                     }
 
-                    int userIdx = NavigateMenu(users, 0);
+                    Console.Clear();
+                    new SpectreTaskView(_userService, _taskUserService).DisplayUsers(users);
+                    int userIdx = NavigateMenu(users, Console.CursorTop, false);
                     if (userIdx == -1)
                     {
                         Pause("No user selected");
@@ -204,32 +209,20 @@ public class ConsoleTaskView : ITaskView
                         break;
                     }
 
-                    int userIdxView = NavigateMenu(usersView, 0);
+                    new SpectreTaskView(_userService, _taskUserService).DisplayUsers(usersView);
+                    int userIdxView = NavigateMenu(usersView, Console.CursorTop, false);
                     if (userIdxView == -1)
                     {
                         Pause("No user selected");
                         break;
                     }
 
-                    var iteratorView = usersView.GetIterator();
-                    int iView = 0;
-                    User selectedUserView = null!;
-                    while (iteratorView.HasNext())
-                    {
-                        var u = iteratorView.Next();
-                        if (iView == userIdxView)
-                        {
-                            selectedUserView = u;
-                            break;
-                        }
-                        iView++;
-                    }
+                    User selectedUserView = GetAtIndex(usersView, userIdxView);
 
-                    var view = new SpectreTaskView(_userService, _taskUserService);
+                    Console.Clear();
+                    AnsiConsole.MarkupLine($"[bold]Tasks for [yellow]{selectedUserView.Name}[/]:[/]\n");
                     var tasksForUser = _taskUserService.GetTasksForUser(selectedUserView.UserID);
-                    view.DisplayTasks(tasksForUser);
-
-                    Console.WriteLine($"\nTasks for {selectedUserView.Name}"); // akif
+                    new SpectreTaskView(_userService, _taskUserService).DisplayTasks(tasksForUser);
                     Pause(); // akif
                     break;
 
@@ -241,7 +234,8 @@ public class ConsoleTaskView : ITaskView
                         Pause("There are no tasks");
                         break;
                     }
-                    int taskIdx = NavigateMenu(tasksView, 0);
+                    new SpectreTaskView(_userService, _taskUserService).DisplayTasks(tasksView);
+                    int taskIdx = NavigateMenu(tasksView, Console.CursorTop, false);
                     if (taskIdx == -1)
                     {
                         Pause("No task selected");
@@ -250,29 +244,16 @@ public class ConsoleTaskView : ITaskView
                     TaskItem selectedTaskView = GetAtIndex(tasksView, taskIdx);
                     Console.Clear();
 
-                    var userIds = _taskUserService.GetUsersForTask(selectedTaskView.ID); //  selectedTaskView.ID = taskid 
+                    var userIds = _taskUserService.GetUsersForTask(selectedTaskView.ID);
                     var usersForTask = _userService.GetUsersByIds(userIds);
                     if (usersForTask.Count == 0)
                     {
-                        Console.ForegroundColor = ConsoleColor.Red;
-                        Console.WriteLine("No users assigned to this task.");
-                        Console.ResetColor();
+                        AnsiConsole.MarkupLine($"[red]No users assigned to \"{selectedTaskView.Description}\".[/]");
                     }
                     else
                     {
-                        Console.ForegroundColor = ConsoleColor.Green;
-                        Console.Write($"Users for this task: ");
-                        Console.ForegroundColor = ConsoleColor.Cyan;
-
-                        var iteratorUsers = usersForTask.GetIterator();
-
-                        while (iteratorUsers.HasNext())
-                        {
-                            var user = iteratorUsers.Next();
-                            Console.Write(user.Name + " "); // akif
-                        }
-                        Console.WriteLine();
-                        Console.ResetColor();
+                        AnsiConsole.MarkupLine($"[bold]Users for:[/] [yellow]{selectedTaskView.Description}[/]\n");
+                        new SpectreTaskView(_userService, _taskUserService).DisplayUsers(usersForTask);
                     }
 
                     Pause(); // akif
@@ -286,7 +267,8 @@ public class ConsoleTaskView : ITaskView
                         Pause("\nThere are no users to delete."); // akif
                         break;
                     }
-                    int selectedIndexDeletion = NavigateMenu(usersForDeletion, 0);
+                    new SpectreTaskView(_userService, _taskUserService).DisplayUsers(usersForDeletion);
+                    int selectedIndexDeletion = NavigateMenu(usersForDeletion, Console.CursorTop, false);
                     if (selectedIndexDeletion == -1)
                     {
                         Pause("\nNo user selected"); // akif
@@ -307,7 +289,8 @@ public class ConsoleTaskView : ITaskView
                         Pause("There are no tasks");
                         break;
                     }
-                    int selectedTaskPriority = NavigateMenu(tasksForPriority, 0);
+                    new SpectreTaskView(_userService, _taskUserService).DisplayTasks(tasksForPriority);
+                    int selectedTaskPriority = NavigateMenu(tasksForPriority, Console.CursorTop, false);
                     if (selectedTaskPriority == -1)
                     {
                         Pause("No task selected");
@@ -324,7 +307,6 @@ public class ConsoleTaskView : ITaskView
 
                 case 9:
                     var tasksDep = _service.GetAllTasks();
-
                     if (tasksDep.Count == 0)
                     {
                         Console.WriteLine("No tasks available");
@@ -332,17 +314,16 @@ public class ConsoleTaskView : ITaskView
                         break;
                     }
                     Console.Clear();
-                    Console.WriteLine("\nSelect task (the one you want to complete): ");
-
+                    AnsiConsole.MarkupLine("[bold]Select task[/] (the one you want to complete):\n");
+                    new SpectreTaskView(_userService, _taskUserService).DisplayTasks(tasksDep);
                     int dtaskIdx = NavigateMenu(tasksDep, Console.CursorTop, false);
                     if (dtaskIdx == -1) break;
 
                     TaskItem task = GetAtIndex(tasksDep, dtaskIdx);
 
                     Console.Clear();
-                    Console.WriteLine("\nSelect dependency (must be completed first): ");
-
-
+                    AnsiConsole.MarkupLine("[bold]Select dependency[/] (must be completed first):\n");
+                    new SpectreTaskView(_userService, _taskUserService).DisplayTasks(tasksDep);
                     int depIdx = NavigateMenu(tasksDep, Console.CursorTop, false);
                     if (depIdx == -1) break;
 
@@ -359,7 +340,6 @@ public class ConsoleTaskView : ITaskView
                     }
                     else
                     {
-
                         Console.ForegroundColor = ConsoleColor.Green;
                         Console.WriteLine("\nDependency added successfully");
                         Console.ReadKey();

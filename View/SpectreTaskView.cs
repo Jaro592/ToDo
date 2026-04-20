@@ -12,7 +12,6 @@ public class SpectreTaskView // Basel
 
     public void DisplayTasks(IMyCollection<TaskItem> tasks)
     {
-        Console.Clear();
         var table = new Table();
         table.AddColumn("[yellow]Description[/]");
         table.AddColumn("[blue]Status[/]");
@@ -29,19 +28,15 @@ public class SpectreTaskView // Basel
             string status = task.Completed ? "[green]Done[/]" : "[red]In Progress[/]";
 
             var usersIds = _taskUserService.GetUsersForTask(task.ID);
-
             var users = _userService.GetUsersByIds(usersIds);
 
             string userNames = "";
-
             var userIter = users.GetIterator();
             while (userIter.HasNext())
             {
                 var user = userIter.Next();
-
                 if (userNames.Length > 0)
                     userNames += ", ";
-
                 userNames += user.Name;
             }
             if (userNames == "")
@@ -52,6 +47,26 @@ public class SpectreTaskView // Basel
                 $"[red]{status}[/]",
                 $"[cyan]{userNames}[/]",
                 $"[magenta]{task.PriorityText}[/]"
+            );
+        }
+
+        AnsiConsole.Write(table);
+    }
+
+    public void DisplayUsers(IMyCollection<User> users)
+    {
+        var table = new Table();
+        table.AddColumn("[yellow]Name[/]");
+        table.AddColumn("[blue]Tasks Assigned[/]");
+
+        var iter = users.GetIterator();
+        while (iter.HasNext())
+        {
+            var user = iter.Next();
+            var taskIds = _taskUserService.GetTasksForUser(user.UserID);
+            table.AddRow(
+                $"[white]{user.Name}[/]",
+                $"[cyan]{taskIds.Count}[/]"
             );
         }
 

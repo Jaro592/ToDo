@@ -45,16 +45,6 @@ class JsonTaskRepository : ITaskRepository
 
     public TaskItem GetById(string taskId) // Jaro
     {
-        var allTasks = LoadTasks();
-        var iterator = allTasks.GetIterator();
-        while (iterator.HasNext())
-        {
-            var currentTask = iterator.Next();
-            if (currentTask.ID == taskId)
-            {
-                return currentTask;
-            }
-        }
-        return null;
+        return _tasks.FindBy(taskId, (task, id) => string.Compare(task.ID, id, StringComparison.Ordinal));
     }
 }
