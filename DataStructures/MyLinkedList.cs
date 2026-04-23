@@ -3,17 +3,17 @@ public sealed class MyLinkedList<T> : IMyCollection<T>, IMyIterator<T> where T :
 
     private int _count;
     private bool _dirty;
-    Node<T>? First = null;
+    Node? First = null;
     public int Count { get => _count; }
     public bool Dirty { get => _dirty; }
 
-    private Node<T>? _current;
+    private Node? _current;
 
     // private Node<T> _node;
 
     public void Add(T item) //Basel
     {
-        Node<T> nNode = new Node<T>(item);
+        Node? nNode = new Node(item);
 
         if (First is null)
         {
@@ -21,7 +21,7 @@ public sealed class MyLinkedList<T> : IMyCollection<T>, IMyIterator<T> where T :
         }
         else
         {
-            Node<T> current = First;
+            Node? current = First;
             while (current.Next is not null)
             {
                 current = current.Next;
@@ -37,7 +37,7 @@ public sealed class MyLinkedList<T> : IMyCollection<T>, IMyIterator<T> where T :
 
     public void AddFirst(T value) // Basel
     {
-        First = new Node<T>(value, First);
+        First = new Node(value, First);
         _count++;
         _dirty = true;
     }
@@ -46,14 +46,14 @@ public sealed class MyLinkedList<T> : IMyCollection<T>, IMyIterator<T> where T :
     {
         if (First is null) return;
 
-        if (First.Data.Equals(item))
+        else if (First.Data.Equals(item))
         {
             First = First.Next;
             _count--;
             _dirty = true;
             return;
         }
-        Node<T>? current = First;
+        Node? current = First;
         while (current.Next is not null)
         {
             if (current.Next.Data.Equals(item))
@@ -69,9 +69,9 @@ public sealed class MyLinkedList<T> : IMyCollection<T>, IMyIterator<T> where T :
 
     }
     // T? FindBy<K>(K key, Func<T, K, int> Comparer); // MyCollectio
-    public T FindBy<K>(K key, Func<T, K, int> Comparer) //Mehmet, Basel
+    public T? FindBy<K>(K key, Func<T, K, int> Comparer) //Mehmet, Basel
     {
-        Node<T>? current = First;
+        Node? current = First;
 
         while (current != null)
         {
@@ -90,7 +90,7 @@ public sealed class MyLinkedList<T> : IMyCollection<T>, IMyIterator<T> where T :
         IMyCollection<T> result = new MyLinkedList<T>();
         if (First is null) return result;
 
-        Node<T>? current = First;
+        Node? current = First;
         while (current is not null)
         {
             if (predicate(current.Data))
@@ -102,7 +102,7 @@ public sealed class MyLinkedList<T> : IMyCollection<T>, IMyIterator<T> where T :
         return result;
     }
 
-    void Swap(Node<T> a, Node<T> b) // Basel
+    void Swap(Node a, Node b) // Basel
     {
         T temp = a.Data;
         a.Data = b.Data;
@@ -115,7 +115,7 @@ public sealed class MyLinkedList<T> : IMyCollection<T>, IMyIterator<T> where T :
         bool swapped;
         do
         {
-            Node<T>? current = First;
+            Node? current = First;
             swapped = false;
             while (current?.Next is not null)
             {
@@ -138,7 +138,7 @@ public sealed class MyLinkedList<T> : IMyCollection<T>, IMyIterator<T> where T :
         R result = initial;
         if (First is null) return result;
 
-        Node<T>? current = First;
+        Node current = First;
         while (current is not null)
         {
             result = accumulator(result, current.Data);
@@ -175,11 +175,11 @@ public sealed class MyLinkedList<T> : IMyCollection<T>, IMyIterator<T> where T :
         _current = First;
     }
 
-    private sealed class Node<T>
+    private sealed class Node // fixed warnings because of node<T> and linkedlist<T>
     {
-        public T Data;
-        public Node<T>? Next;
-        public Node(T data, Node<T>? next = null)
+        public T? Data;
+        public Node? Next;
+        public Node(T? data, Node? next = null)
         {
             Data = data;
             Next = next;

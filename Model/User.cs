@@ -3,8 +3,9 @@ public class User : IEquatable<User> // Basel
     public string UserID { get; set; } // jaro
     public string Name { get; set; }
 
-    public User(string name)
+    public User(string userID, string name)
     {
+        UserID = userID;
         Name = name;
 
     }

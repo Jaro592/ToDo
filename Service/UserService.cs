@@ -19,8 +19,8 @@ public class UserService : Serialize, IUserService
             return false;
         }
         string newId = NewSerializeString();
-        var user = new User(name);
-        user.UserID = newId;
+        var user = new User(newId, name);
+
         _users.Add(user);
 
         return true;

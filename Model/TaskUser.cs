@@ -1,7 +1,7 @@
 public class TaskUser : IEquatable<TaskUser>// Basel
 {
-    public string TaskID { get; set; }
-    public string UserID { get; set; }
+    public required string TaskID { get; set; }
+    public required string UserID { get; set; }
 
     public bool Equals(TaskUser? other)
     {

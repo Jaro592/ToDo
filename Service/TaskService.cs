@@ -4,7 +4,7 @@ class TaskSerivce : Serialize, ITaskService
     private readonly IMyCollection<TaskItem> _tasks;
 
     private readonly ITaskUserService _taskUserService;
-    private MyLinkedList<User> _users;
+    //private MyLinkedList<User> _users;
 
     public TaskSerivce(ITaskRepository repository, ITaskUserService taskUserService)
     {
@@ -92,7 +92,6 @@ class TaskSerivce : Serialize, ITaskService
             if (it.Next().Equals(dependencyId)) return false;
         }
 
-        // cycle detection — can we reach taskId starting from dependencyId?
         if (WouldCreateCycle(taskId, dependencyId)) return false;
 
         task.DependencyIds.Add(dependencyId);
@@ -113,7 +112,6 @@ class TaskSerivce : Serialize, ITaskService
 
             if (current.Equals(taskId)) return true;
 
-            // check if already visited
             if (visited.FindBy(current, (s, k) => s.CompareTo(k)) != null) continue;
             visited.Add(current);
 
