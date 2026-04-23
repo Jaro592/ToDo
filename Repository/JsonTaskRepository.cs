@@ -43,7 +43,7 @@ class JsonTaskRepository : ITaskRepository
         File.WriteAllText(_filePath, json);
     }
 
-    public TaskItem GetById(string taskId) // Jaro
+    public TaskItem? GetById(string taskId) // Jaro
     {
         var allTasks = LoadTasks();
         var iterator = allTasks.GetIterator();
