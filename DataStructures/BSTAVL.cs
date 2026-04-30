@@ -1,15 +1,14 @@
 public class BSTAVL<T> : IMyCollection<T>, IMyIterator<T> where T : IComparable<T>
 {
-
     private Node? _root;
     private int _count;
-    private MyStack? _stack;
+    private MyStack<Node>? _stack;
     public int Count => _count;
     public bool Dirty { get; set; }
 
-    public BSTAVL() 
-    { 
-        _stack = new MyStack(); 
+    public BSTAVL()
+    {
+        _stack = new MyStack<Node>();
     }
 
 
@@ -72,7 +71,7 @@ public class BSTAVL<T> : IMyCollection<T>, IMyIterator<T> where T : IComparable<
 
     public void Reset()
     {
-        _stack = new MyStack();
+        _stack = new MyStack<Node>();
         PushLeftSpine(_root);
     }
 
@@ -199,42 +198,19 @@ public class BSTAVL<T> : IMyCollection<T>, IMyIterator<T> where T : IComparable<
         Display(root.Right);
     }
 
-    private class Node
+    private class Node : IEquatable<Node>
     {
         public T Value;
         public int Height;
         public Node? Left, Right;
-        public Node(T value) { Value = value; Height = 1; }
-    }
-
-    private class NodeRef : IEquatable<NodeRef> // jaro
-    {
-        public Node? TreeNode;
-        public NodeRef(Node? n) 
+        public Node(T value) 
         { 
-            TreeNode = n; 
+            Value = value; Height = 1; 
         }
-        public bool Equals(NodeRef? other) => ReferenceEquals(TreeNode, other?.TreeNode);
-    }
 
-    private class MyStack // jaro
-    {
-        private MyLinkedList<NodeRef> _list = new();
-        public bool IsEmpty
+        public bool Equals(Node? other) 
         {
-            get { return _list.Count == 0; }
-        }
-        public void Push(Node? n)
-        {
-            _list.AddFirst(new NodeRef(n));
-        }
-        public Node? Pop()
-        {
-            if (IsEmpty) return null;
-            _list.Reset();
-            NodeRef? top = _list.Next();
-            _list.Remove(top);
-            return top.TreeNode;
+            return ReferenceEquals(this, other);
         }
     }
-}
+    }
