@@ -100,15 +100,14 @@ class TaskSerivce : Serialize, ITaskService
 
     private bool WouldCreateCycle(string taskId, string dependencyId)
     {
-        var visited = new MyArray<string>();
-        var stack = new MyLinkedList<string>();
-        stack.AddFirst(dependencyId);
+        var visited = new MyLinkedList<string>();
+        var stack = new MyStack<string>();
+
+        stack.Push(dependencyId);
 
         while (stack.Count > 0)
         {
-            stack.Reset();
-            string current = stack.Next();
-            stack.Remove(current);
+            string current = stack.Pop();
 
             if (current.Equals(taskId)) return true;
 
@@ -123,7 +122,7 @@ class TaskSerivce : Serialize, ITaskService
             {
                 string nextId = iter.Next();
                 if (visited.FindBy(nextId, (s, k) => s.CompareTo(k)) == null)
-                    stack.AddFirst(nextId);
+                    stack.Push(nextId);
             }
         }
 
@@ -133,17 +132,13 @@ class TaskSerivce : Serialize, ITaskService
     public bool CanComplete(TaskItem task)
     {
         var it = task.DependencyIds.GetIterator();
-
         while (it.HasNext())
         {
             var depId = it.Next();
             var depTask = FindTask(depId);
             if (depTask == null || !depTask.Completed)
-            {
                 return false;
-            }
         }
-
         return true;
     }
 
