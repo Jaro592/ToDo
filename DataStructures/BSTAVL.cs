@@ -52,7 +52,7 @@ public class BSTAVL<T> : IMyCollection<T>, IMyIterator<T> where T : IComparable<
         var res = new BSTAVL<T>();
         if(_root is null) 
         {
-            return re;
+            return res;
         }
 
         var it = GetIterator();
@@ -64,7 +64,7 @@ public class BSTAVL<T> : IMyCollection<T>, IMyIterator<T> where T : IComparable<
                 res.Add(value);
             }
         }
-        return result;
+        return res;
 
     }
     public void Sort(Comparison<T> comparison)
@@ -78,10 +78,10 @@ public class BSTAVL<T> : IMyCollection<T>, IMyIterator<T> where T : IComparable<
         var it = GetIterator();
         while(it.HasNext())
         {
-            result = accumulator(res, it.Next());
+            res = accumulator(res, it.Next());
         }
 
-        return result;
+        return res;
 
     }
 
