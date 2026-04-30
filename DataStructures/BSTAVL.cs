@@ -105,7 +105,7 @@ public class BSTAVL<T> : IMyCollection<T>, IMyIterator<T> where T : IComparable<
 
     public bool HasNext() => !_stack.IsEmpty;
 
-    public T? Next()
+    public T Next()
     {
         if (!HasNext()) return default!;
 

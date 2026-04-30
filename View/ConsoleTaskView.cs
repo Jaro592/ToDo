@@ -376,6 +376,12 @@ public class ConsoleTaskView : ITaskView
                     _taskUserService.SaveAll();
                     Pause("Saved"); // akif
                     return;
+                case 11:
+                    _userService.SaveAll();
+                    _service.SaveAll();
+                    _taskUserService.SaveAll();
+                    return;
+                    
             }
         }
     }

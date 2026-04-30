@@ -1,4 +1,4 @@
-public class TaskUser : IEquatable<TaskUser>// Basel
+public class TaskUser : IEquatable<TaskUser>, IComparable<TaskUser>// Basel
 {
     public required string TaskID { get; set; }
     public required string UserID { get; set; }
@@ -8,6 +8,8 @@ public class TaskUser : IEquatable<TaskUser>// Basel
         if (other == null) return false;
         return TaskID == other.TaskID && UserID == other.UserID;
     }
+
+    public int CompareTo(TaskUser? other) => TaskID.CompareTo(other?.TaskID);
 
     public override bool Equals(object? obj)
     {

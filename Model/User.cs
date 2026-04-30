@@ -1,4 +1,4 @@
-public class User : IEquatable<User> // Basel
+public class User : IEquatable<User>,  IComparable<User> // Basel
 {
     public string UserID { get; set; } // jaro
     public string Name { get; set; }
@@ -25,6 +25,10 @@ public class User : IEquatable<User> // Basel
     {
         return Name.GetHashCode();
     }
+
+    public int CompareTo(User? other) => UserID.CompareTo(other?.UserID);
+
+    public int CompareTo(object? obj) => CompareTo(obj as User);
 
     public override string ToString() // Basel
     {

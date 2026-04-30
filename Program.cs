@@ -22,9 +22,9 @@
         string userFilePath = "user.json";
         string taskUserFilePath = "task_users.json";
 
-        ITaskRepository taskRepository = new JsonTaskRepository(taskFilePath, new MyArray<TaskItem>());
-        IUserRepository userRepository = new JsonUserRepository(userFilePath, new MyLinkedList<User>());
-        ITaskUserRepository taskUserRepository = new JsonTaskUserRepository(taskUserFilePath, new MyLinkedList<TaskUser>());
+        ITaskRepository taskRepository = new JsonTaskRepository(taskFilePath, new BSTAVL<TaskItem>());
+        IUserRepository userRepository = new JsonUserRepository(userFilePath, new BSTAVL<User>());
+        ITaskUserRepository taskUserRepository = new JsonTaskUserRepository(taskUserFilePath, new BSTAVL<TaskUser>());
 
         ITaskUserService taskUserService = new TaskUserService(taskUserRepository, taskRepository);
         ITaskService taskService = new TaskSerivce(taskRepository, taskUserService);
