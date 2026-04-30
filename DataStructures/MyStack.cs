@@ -1,4 +1,4 @@
-public class MyStack<T> where T : IEquatable<T>
+public class MyStack<T> where T : IEquatable<T> // Jaro
 {
     private readonly MyLinkedList<T> _list = new();
 
