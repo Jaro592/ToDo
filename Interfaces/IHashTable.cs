@@ -4,5 +4,4 @@ public interface IHashTable<K, V>
     V? Get(K key);
     void Remove(K key);
     bool ContainsKey(K key);
-
 }
