@@ -2,18 +2,11 @@
 {
     static void Main(string[] args)
     {
+        Console.Clear();
         //Bstview();
-        //int numb = 1;
+
         StartApp();
-        // var ht = new HashTable<string, int>();
-
-        // ht.Add("A", 1);
-        // ht.Add("B", 2);
-        // ht.Add("A", 5);
-
-        // Console.WriteLine(ht.Get("A"));
-        // Console.WriteLine(ht.Get("B"));
-        // Console.WriteLine(ht.Get("C"));
+        // HashView();
     }
 
     private static void StartApp()
@@ -43,5 +36,14 @@
         BstView view = new BstView(bst);
         view.Fill();
         view.Display();
+    }
+    public static void HashView()
+    {
+        var table = new HashTable<string, TaskItem>();
+        var view = new HashTableView(table);
+
+        view.Fill();
+        view.Display();
+        view.TestBehavior();
     }
 }
