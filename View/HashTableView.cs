@@ -87,3 +87,100 @@ public class HashTableView : Serialize
         Console.WriteLine(ok ? "Resize OK ✔" : "Resize BROKEN ❌");
     }
 }
+
+
+// public class HashTableView : Serialize
+// {
+//     private HashTable<TaskItem> _table;
+
+//     public HashTableView(HashTable<TaskItem> table)
+//     {
+//         _table = table;
+//     }
+
+//     public void Fill()
+//     {
+//         for (int i = 1; i <= 5; i++)
+//         {
+//             var task = new TaskItem
+//             {
+//                 ID = NewSerializeString(),
+//                 Description = $"Task {i}",
+//                 Completed = i % 2 == 0
+//             };
+
+//             _table.Add(task); // ✔ بدون key
+//         }
+//     }
+
+//     public void Display()
+//     {
+//         Console.WriteLine("Tasks in HashTable:");
+
+//         var it = _table.GetIterator();
+
+//         while (it.HasNext())
+//         {
+//             var task = it.Next();
+//             Console.WriteLine($"{task.ID} -> {task}");
+//         }
+//     }
+
+//     public void TestBehavior()
+//     {
+//         Console.WriteLine("\n=== Behavior Test ===");
+
+//         var it = _table.GetIterator();
+//         if (!it.HasNext()) return;
+
+//         var first = it.Next();
+
+//         // 🔹 FindBy بدل Get
+//         Console.WriteLine("\nFind test:");
+//         var found = _table.FindBy(first.ID, (t, key) => t.ID.CompareTo(key));
+//         Console.WriteLine(found != null ? "Found ✔" : "Not Found ❌");
+
+//         // 🔹 Contains (نعمله عبر FindBy)
+//         Console.WriteLine("\nContains test:");
+//         var exists = _table.FindBy(first.ID, (t, key) => t.ID.CompareTo(key)) != null;
+//         Console.WriteLine(exists);
+
+//         // 🔹 Remove
+//         Console.WriteLine("\nRemove test:");
+//         _table.Remove(first);
+
+//         var stillExists = _table.FindBy(first.ID, (t, key) => t.ID.CompareTo(key)) != null;
+//         Console.WriteLine(stillExists);
+
+//         // 🔹 Resize test
+//         Console.WriteLine("\nResize test:");
+
+//         for (int i = 0; i < 50; i++)
+//         {
+//             var t = new TaskItem
+//             {
+//                 ID = NewSerializeString(),
+//                 Description = $"Bulk {i}",
+//                 Completed = false
+//             };
+
+//             _table.Add(t);
+//         }
+
+//         bool ok = true;
+
+//         var it2 = _table.GetIterator();
+//         while (it2.HasNext())
+//         {
+//             var t = it2.Next();
+
+//             if (_table.FindBy(t.ID, (x, key) => x.ID.CompareTo(key)) == null)
+//             {
+//                 ok = false;
+//                 break;
+//             }
+//         }
+
+//         Console.WriteLine(ok ? "Resize OK ✔" : "Resize BROKEN ❌");
+//     }
+// }

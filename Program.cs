@@ -15,9 +15,9 @@
         string userFilePath = "user.json";
         string taskUserFilePath = "task_users.json";
 
-        ITaskRepository taskRepository = new JsonTaskRepository(taskFilePath, new BSTAVL<TaskItem>());
-        IUserRepository userRepository = new JsonUserRepository(userFilePath, new BSTAVL<User>());
-        ITaskUserRepository taskUserRepository = new JsonTaskUserRepository(taskUserFilePath, new BSTAVL<TaskUser>());
+        ITaskRepository taskRepository = new JsonTaskRepository(taskFilePath, new HashCollection<TaskItem>());
+        IUserRepository userRepository = new JsonUserRepository(userFilePath, new HashCollection<User>());
+        ITaskUserRepository taskUserRepository = new JsonTaskUserRepository(taskUserFilePath, new HashCollection<TaskUser>());
 
         ITaskUserService taskUserService = new TaskUserService(taskUserRepository, taskRepository);
         ITaskService taskService = new TaskSerivce(taskRepository, taskUserService);
@@ -46,4 +46,13 @@
         view.Display();
         view.TestBehavior();
     }
+    // public static void HashView()
+    // {
+    //     var table = new HashTable<TaskItem>(t => t.ID);
+    //     var view = new HashTableView(table);
+
+    //     view.Fill();
+    //     view.Display();
+    //     view.TestBehavior();
+    // }
 }

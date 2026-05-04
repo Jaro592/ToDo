@@ -1,4 +1,4 @@
-public class HashTable<K, V> : IHashTable<K, V>, IMyCollection<HashTable<K, V>.Entry>
+public class HashTable<K, V> : IHashTable<K, V>
 {
     private IMyCollection<Entry>[] buckets;
     private int Capacity;
@@ -178,7 +178,15 @@ public class HashTable<K, V> : IHashTable<K, V>, IMyCollection<HashTable<K, V>.E
 
     public IMyCollection<Entry> GetEnumerator()
     {
-        return this;
+        var all = new MyLinkedList<Entry>();
+
+        var it = GetIterator();
+        while (it.HasNext())
+        {
+            all.Add(it.Next());
+        }
+
+        return all;
     }
 
     public Entry? FindBy<K2>(K2 key, Func<Entry, K2, int> comparer)
