@@ -2,18 +2,11 @@
 {
     static void Main(string[] args)
     {
+        Console.Clear();
         //Bstview();
-        //int numb = 1;
+
         StartApp();
-        // var ht = new HashTable<string, int>();
-
-        // ht.Add("A", 1);
-        // ht.Add("B", 2);
-        // ht.Add("A", 5);
-
-        // Console.WriteLine(ht.Get("A"));
-        // Console.WriteLine(ht.Get("B"));
-        // Console.WriteLine(ht.Get("C"));
+        // HashView();
     }
 
     private static void StartApp()
@@ -22,9 +15,9 @@
         string userFilePath = "user.json";
         string taskUserFilePath = "task_users.json";
 
-        ITaskRepository taskRepository = new JsonTaskRepository(taskFilePath, new BSTAVL<TaskItem>());
-        IUserRepository userRepository = new JsonUserRepository(userFilePath, new BSTAVL<User>());
-        ITaskUserRepository taskUserRepository = new JsonTaskUserRepository(taskUserFilePath, new BSTAVL<TaskUser>());
+        ITaskRepository taskRepository = new JsonTaskRepository(taskFilePath, new HashCollection<TaskItem>());
+        IUserRepository userRepository = new JsonUserRepository(userFilePath, new HashCollection<User>());
+        ITaskUserRepository taskUserRepository = new JsonTaskUserRepository(taskUserFilePath, new HashCollection<TaskUser>());
 
         ITaskUserService taskUserService = new TaskUserService(taskUserRepository, taskRepository);
         ITaskService taskService = new TaskSerivce(taskRepository, taskUserService);
@@ -44,4 +37,22 @@
         view.Fill();
         view.Display();
     }
+    public static void HashView()
+    {
+        var table = new HashTable<string, TaskItem>();
+        var view = new HashTableView(table);
+
+        view.Fill();
+        view.Display();
+        view.TestBehavior();
+    }
+    // public static void HashView()
+    // {
+    //     var table = new HashTable<TaskItem>(t => t.ID);
+    //     var view = new HashTableView(table);
+
+    //     view.Fill();
+    //     view.Display();
+    //     view.TestBehavior();
+    // }
 }
